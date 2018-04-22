@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/app_bar_height"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:gravity="center_vertical">
+
+
+    <ImageView
+        android:id="@+id/app_title"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="14dp"/>
+    
+    <!--<TextView-->
+        <!--style="@style/app_bar_text_style"-->
+        <!--android:text="PURPLE"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/filter_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/ic_filter_list_white_28dp"-->
+            <!--android:backgroundTint="@color/transparent"-->
+            <!--android:layout_toStartOf="@+id/search_button"/>-->
+
+        <ImageButton
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_search_white_28dp"
+            android:backgroundTint="@color/transparent"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</LinearLayout>

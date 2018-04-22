@@ -1,0 +1,176 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/content_background"
+    android:animateLayoutChanges="true"
+    tools:context="com.hyunstyle.inhapet.fragment.OutsideSchoolFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <!--<include layout="@layout/content_app_bar_extended"/>-->
+    <include layout="@layout/content_app_bar"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/outside_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/app_bar_height"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_card_top_margin"
+            android:layout_marginBottom="@dimen/content_card_bottom_margin">
+
+                <LinearLayout
+                    android:id="@+id/top_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/image_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginBottom="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_below="@id/top_container"
+                    android:id="@+id/slider_dots_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|center_horizontal">
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_below="@id/slider_dots_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/filter_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageView
+                            android:id="@+id/filter_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_filter_14dp"
+                            android:layout_marginStart="@dimen/content_card_horizontal_margin" />
+
+                        <TextView
+                            style="@style/outside_text_style"
+                            android:id="@+id/filter_text"
+                            android:text="@string/outside_filter" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/indicator"/>
+                    </LinearLayout>
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/menu_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_below="@id/filter_layout"
+                        android:layout_marginTop="@dimen/card_margin"
+                        android:layout_marginStart="@dimen/content_card_horizontal_margin"/>
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/result_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="290dp">
+
+                    <ImageView
+                        android:id="@+id/result_list_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_result_shop_list_14dp"
+                        android:layout_marginStart="@dimen/content_card_horizontal_margin" />
+
+                    <TextView
+                        style="@style/outside_text_style"
+                        android:id="@+id/result_list_text"
+                        android:text="@string/outside_result_list"
+                        android:layout_toEndOf="@+id/result_list_icon" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_toEndOf="@id/result_list_text"
+                        android:background="@color/indicator"/>
+
+                    <LinearLayout
+                        android:id="@+id/best_place_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+
+                        android:layout_marginTop="@dimen/card_margin"
+                        android:layout_marginStart="@dimen/content_card_horizontal_margin"
+                        android:layout_marginEnd="@dimen/content_card_horizontal_margin"
+                        android:elevation="4dp">
+
+
+
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_below="@id/result_list_icon"
+                        android:id="@+id/result_list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/content_card_horizontal_margin"
+                        android:layout_marginEnd="@dimen/content_card_horizontal_margin">
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="horizontal">-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="70dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/black"-->
+            <!--android:gravity="center">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/toggle_restaurant"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="80dp"-->
+                <!--android:text="RES"/>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
+            <!--<ListView-->
+                <!--android:id="@+id/restaurant_list"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content">-->
+            <!--</ListView>-->
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
+
+
+
+
+
+</FrameLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_outside_school"
+        android:icon="@drawable/ic_bottom_outside_school"
+        android:title="@string/bottom_outside_school" />
+
+    <item
+        android:id="@+id/navigation_calculation"
+        android:icon="@drawable/ic_bottom_calculation"
+        android:title="@string/bottom_calculation" />
+
+    <item
+        android:id="@+id/navigation_inside_school"
+        android:icon="@drawable/ic_bottom_inside_school"
+        android:title="@string/bottom_inside_school" />
+
+    <item
+        android:id="@+id/navigation_information"
+        android:icon="@drawable/ic_bottom_info"
+        android:title="@string/bottom_information" />
+
+</menu>

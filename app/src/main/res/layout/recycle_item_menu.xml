@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_marginTop="@dimen/outside_menu_card_margin_vertical"
+    android:layout_marginBottom="@dimen/outside_menu_card_margin_vertical"
+    android:layout_marginEnd="@dimen/outside_menu_card_margin_end"
+    app:cardCornerRadius="@dimen/card_corners"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:id="@+id/menu_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/transparent"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/card_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="4dp"
+            android:src="@drawable/cat"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/card_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="밥집"
+            android:textSize="14dp"
+            android:textColor="@color/gray"/>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

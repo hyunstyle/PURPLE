@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/type_layout"
+    android:layout_width="@dimen/dialog_list_item_width"
+    android:layout_height="@dimen/dialog_list_item_height"
+    android:background="@drawable/btn_round"
+    android:layout_margin="8dp">
+
+    <TextView
+        android:id="@+id/type_text"
+        style="@style/survey_content_style"
+        android:text="한식"/>
+
+</LinearLayout>
