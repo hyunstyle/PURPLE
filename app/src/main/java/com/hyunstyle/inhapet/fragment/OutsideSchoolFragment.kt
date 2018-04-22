@@ -86,6 +86,8 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
     private lateinit var appTitleView: ImageView
     private lateinit var nestedScrollView: NestedScrollView
+    private lateinit var topProgressBar: ProgressBar
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var resultLayout: RelativeLayout
     private lateinit var filterLayout: LinearLayout
@@ -99,7 +101,6 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     //private lateinit var resultAdapter: RestaurantAdapter
     private lateinit var resultRecyclerViewLayoutManager: RecyclerView.LayoutManager
 
-    private lateinit var restaurantListView: ListView
     private lateinit var adapter: RestaurantAdapter
     private var realm: Realm? = null
     private lateinit var items: RealmResults<Restaurant>
@@ -116,10 +117,17 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     private lateinit var menuRecyclerView: RecyclerView
 
     private lateinit var bestPlaceLayout: LinearLayout
+    private var pageNumber: Int = 1
+    private var itemCount: Int = 10
+
+    private var visibleItemCount: Int = 0
+    private var totalItemCount: Int = 0
+    private var pastVisibleItem: Int = 0
+    private var previousTotal: Int = 0
+    private var isLoading: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
         val view = inflater.inflate(R.layout.fragment_outside_school, container, false)
 
         Log.e("outside oncreateview", "oncreate")
@@ -147,6 +155,9 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
         Log.e("onstart", "dd")
 
+        topProgressBar.visibility = View.VISIBLE
+        progressBar.visibility = View.VISIBLE
+
         if(urls.size == 0) {
             //val jsonArray: JSONArray? =
             ImageUrlDownloadingThread(this).execute(resources.getString(R.string.getImageURL), resources.getString(R.string.client))
@@ -155,6 +166,24 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
             viewPager.adapter = topAdViewPagerAdapter
             createDots(viewPager, topAdViewPagerAdapter)
         }
+
+        if(realm == null) {
+            realm = Realm.getInstance(Config().get(context!!))
+        }
+        // 1 10   11 20   10n - 9 ,  10n
+        items = realm!!.where(Restaurant::class.java)
+                .between("id", pageNumber*itemCount - 9, pageNumber * itemCount)
+                .findAllAsync()
+
+        //resultAdapter.setData(realmResults)
+        items.addChangeListener {
+            result -> kotlin.run {
+            resultAdapter.setData(result)
+            progressBar.visibility = View.GONE
+        }
+        }
+
+        //loadMore()
     }
 
     private fun init(view: View) {
@@ -165,6 +194,21 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
         appTitleView = view.findViewById(R.id.app_title)
         nestedScrollView = view.findViewById(R.id.outside_scroll_view)
+        nestedScrollView.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
+            override fun onScrollChange(v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
+                //Log.e("count", "" + v!!.childCount)
+                if(v!!.getChildAt(v.childCount - 1) != null) {
+                    if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight)) &&
+                            scrollY > oldScrollY) {
+                        // next scroll page loading
+                        pageNumber += 1
+                        loadMore()
+                    }
+                }
+            }
+        })
+        topProgressBar = view.findViewById(R.id.top_progress_bar)
+        progressBar = view.findViewById(R.id.progress_bar)
         resultLayout = view.findViewById(R.id.result_layout)
         filterLayout = view.findViewById(R.id.filter_layout)
         filterLayout.isClickable = false
@@ -213,24 +257,13 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         resultRecyclerViewLayoutManager = GridScrollLayoutManager(context!!, 2, GridScrollLayoutManager.VERTICAL, false)
 
         resultRecyclerView.setHasFixedSize(true)
+        //resultRecyclerView.itemAnimator =
         resultRecyclerView.isNestedScrollingEnabled = false
         resultRecyclerView.layoutManager = resultRecyclerViewLayoutManager
 
         resultAdapter = ResultViewAdapter()
+        resultAdapter.setHasStableIds(true)
         resultRecyclerView.adapter = resultAdapter
-
-//        if(realm == null) {
-//            realm = Realm.getInstance(Config().get(context!!))
-//        }
-//
-//        items = realm!!.where(Restaurant::class.java)
-//                .findAllAsync()
-//
-//        Log.e("size", "" + items.size)
-//        //resultAdapter.setData(realmResults)
-//        items.addChangeListener {
-//            result -> resultAdapter.setData(result)
-//        }
 
         //resultAdapter = RestaurantAdapter(context!!, R.layout.list_item_restaurant)
         //resultRecyclerView!!.adapter = resultAdapter
@@ -255,8 +288,28 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         l.orientation = LinearLayoutManager.HORIZONTAL
         menuRecyclerView.adapter = CardViewAdapter(cardList, context, this)
         menuRecyclerView.layoutManager = l
+    }
 
+    private fun loadMore() {
 
+        progressBar.visibility = View.VISIBLE
+
+        if(realm == null) {
+            realm = Realm.getInstance(Config().get(context!!))
+        }
+        // 1 10   11 20   10n - 9 ,  10n
+        items = realm!!.where(Restaurant::class.java)
+                .between("id", 1, pageNumber * itemCount)
+                .findAllAsync()
+
+        //Log.e("size", "" + items.size)
+        //resultAdapter.setData(realmResults)
+        items.addChangeListener {
+            result -> kotlin.run {
+            resultAdapter.setData(result)
+            progressBar.visibility = View.GONE
+            }
+        }
     }
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -295,6 +348,8 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
                 viewPager.adapter = topAdViewPagerAdapter
 
                 createDots(viewPager, topAdViewPagerAdapter)
+
+                topProgressBar.visibility = View.GONE
 
             } else {
                 Log.d("no results", "no image.")

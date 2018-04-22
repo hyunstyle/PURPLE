@@ -25,17 +25,23 @@
             android:layout_marginTop="@dimen/content_card_top_margin"
             android:layout_marginBottom="@dimen/content_card_bottom_margin">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/top_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/top_progress_bar"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"/>
                     <android.support.v4.view.ViewPager
                         android:id="@+id/image_viewpager"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_marginBottom="8dp"/>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_below="@id/top_container"
@@ -126,6 +132,13 @@
 
 
                     </LinearLayout>
+                    
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:layout_below="@id/result_list_icon"

@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey
  * Created by sh on 2018-04-04.
  */
 
-open class Restaurant(@PrimaryKey var id: String? = null,
+open class Restaurant(@PrimaryKey var id: Int? = null,
                       var isClose: Boolean = false,
                       var subCategory: Int = 0,
                       var famousMenu: String? = null,

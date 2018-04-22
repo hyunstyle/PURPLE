@@ -42,14 +42,29 @@ public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
     }
 
     public void setData(List<Restaurant> data) {
-        Log.e("setdata", "called");
+
         this.resultList = data;
         notifyDataSetChanged();
+//        notifyItemRangeInserted(prevSize, size);
+//        notifyItemRangeChanged(prevSize, size);
     }
+
+//    public void addData(List<Restaurant> data) {
+//
+//        for(Restaurant r: data) {
+//            this.resultList.add(r);
+//        }
+//        //resultList.addAll(data);
+//        notifyDataSetChanged();
+//    }
 
     @Override
     public int getItemCount() {
         return resultList.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
 }

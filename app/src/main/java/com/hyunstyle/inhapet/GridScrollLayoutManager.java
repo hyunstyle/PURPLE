@@ -31,6 +31,11 @@ public class GridScrollLayoutManager extends GridLayoutManager {
     }
 
     @Override
+    public int findFirstVisibleItemPosition() {
+        return super.findFirstVisibleItemPosition();
+    }
+
+    @Override
     public int computeVerticalScrollOffset(RecyclerView.State state) {
 
         Log.e("vertical", "" + state.getTargetScrollPosition());
