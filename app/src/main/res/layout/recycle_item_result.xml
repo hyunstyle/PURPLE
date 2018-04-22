@@ -4,18 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="10dp"
-    android:padding="3dp"
+    app:cardElevation="4dp"
+    android:layout_margin="@dimen/card_margin"
     android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/shop_image"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:src="@drawable/test"/>
+            android:layout_height="100dp" />
 
         <TextView
             android:id="@+id/shop_name_text"
@@ -51,7 +52,8 @@
                 android:id="@+id/shop_number_of_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10" />
+                android:text="10"
+                android:textColor="@color/black"/>
         </LinearLayout>
 
     </RelativeLayout>

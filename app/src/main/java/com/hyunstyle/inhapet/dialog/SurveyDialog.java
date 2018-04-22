@@ -93,18 +93,22 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
             }
         }
 
-        onSubmitListener.shrink();
+
+        //onSubmitListener.filter(checkedNumber, filterPosition);
+
+        //onSubmitListener.shrink();
+        onSubmitListener.filter(checkedNumber, filterPosition);
+        this.dismiss();
 
 //        Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
-//
+//                onSubmitListener.filter(checkedNumber, filterPosition);
 //            }
-//        }, 310);
-        onSubmitListener.filter(checkedNumber, filterPosition);
+//        }, 600);
 
-        this.dismiss();
+
         //this.dismiss();
         //onSubmitListener.shrink();
     }

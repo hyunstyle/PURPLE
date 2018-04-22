@@ -1,6 +1,7 @@
 package com.hyunstyle.inhapet.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,8 @@ public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
         holder.getShopFamousMenuTextView().setText(resultList.get(position).getFamousMenu());
     }
 
-    public synchronized void setData(List<Restaurant> data) {
+    public void setData(List<Restaurant> data) {
+        Log.e("setdata", "called");
         this.resultList = data;
         notifyDataSetChanged();
     }

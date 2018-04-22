@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             Log.e("great", "greaT~");
 
         } else { // 처음 실행시
-
             loadingDialog = new LoadingDialog(context);
             loadingDialog.show();
 
@@ -119,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         BottomNavigationAnimateHelper.disableShiftMode(bottomNavigationView);
         fragmentManager = getSupportFragmentManager();
+        setViewPager(viewPager);
 
         Button button = findViewById(R.id.start_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -147,16 +147,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void setViewPager(MainViewPager pager) {
 
-        pager.setOffscreenPageLimit(3);
+        //pager.setOffscreenPageLimit(2);
 
         OutsideSchoolFragment outsideSchoolFragment = new OutsideSchoolFragment();
-        ResultFragment resultFragment = new ResultFragment();
+        //ResultFragment resultFragment = new ResultFragment();
         CalculationFragment calculationFragment = new CalculationFragment();
         InsideSchoolFragment insideSchoolFragment = new InsideSchoolFragment();
         SettingsFragment settingsFragment = new SettingsFragment();
 
         adapter.addFragment(outsideSchoolFragment);
-        adapter.addFragment(resultFragment); // hidden fragment
+        //adapter.addFragment(resultFragment); // hidden fragment
         adapter.addFragment(calculationFragment);
         adapter.addFragment(insideSchoolFragment);
         adapter.addFragment(settingsFragment);
@@ -189,11 +189,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //            Log.d("auth", "already");
 //        }
 
-        setViewPager(viewPager);
+
         //fadeOutIntroView(introLayout);
 
         // 처음 시작화면을 중앙 아이템으로
-        bottomNavigationView.setSelectedItemId(R.id.navigation_inside_school);
+        //bottomNavigationView.setSelectedItemId(R.id.navigation_inside_school);
         super.onResume();
     }
 
@@ -273,15 +273,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 //bottomNavigationView.setSelectedItemId(0);
                 break;
             case R.id.navigation_calculation:
-                viewPager.setCurrentItem(2); // Entire List is hidden.
+                viewPager.setCurrentItem(1); // Entire List is hidden.
                 //foregroundFragment = new CalculationFragment();
                 break;
             case R.id.navigation_inside_school:
-                viewPager.setCurrentItem(3);
+                viewPager.setCurrentItem(2);
                 //foregroundFragment = new InsideSchoolFragment();
                 break;
             case R.id.navigation_information:
-                viewPager.setCurrentItem(4);
+                viewPager.setCurrentItem(3);
                 //foregroundFragment = new ResultFragment();
                 break;
         }

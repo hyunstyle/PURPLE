@@ -4,6 +4,7 @@ package com.hyunstyle.inhapet.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,10 @@ public class CalculationFragment extends Fragment {
         adView = v.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+
+//        RecyclerView recyclerView = v.findViewById(R.id.recycler_views);
+//
+//        recyclerView.setNestedScrollingEnabled(false);
         // Inflate the layout for this fragment
         return v;
     }

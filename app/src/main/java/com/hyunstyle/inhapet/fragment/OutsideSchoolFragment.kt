@@ -1,6 +1,7 @@
 package com.hyunstyle.inhapet.fragment
 
 
+import android.animation.Animator
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -18,12 +19,14 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.hyunstyle.inhapet.Config
+import com.hyunstyle.inhapet.GridScrollLayoutManager
 
 import com.hyunstyle.inhapet.R
 import com.hyunstyle.inhapet.adapter.CardViewAdapter
 import com.hyunstyle.inhapet.adapter.RestaurantAdapter
 import com.hyunstyle.inhapet.adapter.ResultViewAdapter
 import com.hyunstyle.inhapet.adapter.TopAdViewPagerAdapter
+import com.hyunstyle.inhapet.dialog.LoadingDialog
 import com.hyunstyle.inhapet.dialog.SurveyDialog
 import com.hyunstyle.inhapet.interfaces.AsyncTaskResponse
 import com.hyunstyle.inhapet.model.Restaurant
@@ -31,6 +34,7 @@ import com.hyunstyle.inhapet.thread.ImageUrlDownloadingThread
 import io.realm.Realm
 import io.realm.RealmResults
 import org.json.JSONArray
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -40,11 +44,14 @@ import kotlin.collections.ArrayList
 class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageChangeListener, SurveyDialog.OnSubmitListener {
     override fun shrink() {
         //TODO 멀티스레드 shrink + recyclerview 생성 처리하기
-        resultLayout.animate().translationY(-85f).withLayer()
         menuRecyclerView.startAnimation(shrinkAnim)
     }
 
     override fun filter(list: java.util.ArrayList<Int>, filterPosition: Int) {
+
+//        var loadingDialog = LoadingDialog(context!!)
+//
+//        loadingDialog.show()
 
         if(realm == null) {
             realm = Realm.getInstance(Config().get(context!!))
@@ -53,8 +60,6 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         Log.e("filter", "" + filterPosition)
         when (filterPosition) {
             0 -> { // Restaurant Result
-
-                Log.e("clickedLength~", "" + list.size)
 
                 val realmResults = realm!!.where(Restaurant::class.java)
                         .`in`("subCategory", list.toTypedArray())
@@ -148,8 +153,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         } else {
             topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
             viewPager.adapter = topAdViewPagerAdapter
-            viewPager.addOnPageChangeListener(this)
-            viewPager.setCurrentItem(0, true)
+            createDots(viewPager, topAdViewPagerAdapter)
         }
     }
 
@@ -175,40 +179,59 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
         filterIcon = view.findViewById(R.id.filter_button)
         filterText = view.findViewById(R.id.filter_text)
-        expandAnim = AnimationUtils.loadAnimation(context!!, R.anim.anim_expand)
-        expandAnim.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(p0: Animation?) {}
-
-            override fun onAnimationEnd(p0: Animation?) {}
-
-            override fun onAnimationStart(p0: Animation?) {
-                menuRecyclerView.visibility = View.VISIBLE
-            }
-        })
-        shrinkAnim = AnimationUtils.loadAnimation(context!!, R.anim.anim_shrink)
-        shrinkAnim.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationEnd(p0: Animation?) {
-                menuRecyclerView.visibility = View.GONE
-                filterLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.white))
-                filterIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_expand_16dp))
-                filterText.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
-                filterLayout.isClickable = true
-            }
-
-            override fun onAnimationStart(p0: Animation?) {
-                Log.e("start", "start")
-            }
-
-            override fun onAnimationRepeat(p0: Animation?) {
-                Log.e("repeat", "repeat")
-            }
-        })
+//        expandAnim = AnimationUtils.loadAnimation(context!!, R.anim.anim_expand)
+//        expandAnim.setAnimationListener(object : Animation.AnimationListener {
+//            override fun onAnimationRepeat(p0: Animation?) {}
+//
+//            override fun onAnimationEnd(p0: Animation?) {}
+//
+//            override fun onAnimationStart(p0: Animation?) {
+//                menuRecyclerView.visibility = View.VISIBLE
+//            }
+//        })
+//        shrinkAnim = AnimationUtils.loadAnimation(context!!, R.anim.anim_shrink)
+//        shrinkAnim.setAnimationListener(object : Animation.AnimationListener {
+//            override fun onAnimationEnd(p0: Animation?) {
+//                menuRecyclerView.visibility = View.GONE
+//                filterLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.white))
+//                filterIcon.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_expand_16dp))
+//                filterText.setTextColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
+//                filterLayout.isClickable = true
+//            }
+//
+//            override fun onAnimationStart(p0: Animation?) {
+//                resultLayout.animate().translationY(-85f).withLayer()
+//                Log.e("start", "start")
+//            }
+//
+//            override fun onAnimationRepeat(p0: Animation?) {
+//                Log.e("repeat", "repeat")
+//            }
+//        })
 
         resultRecyclerView = view.findViewById(R.id.result_list_view)
-        resultRecyclerViewLayoutManager = GridLayoutManager(context!!, 2)
+        resultRecyclerViewLayoutManager = GridScrollLayoutManager(context!!, 2, GridScrollLayoutManager.VERTICAL, false)
+
+        resultRecyclerView.setHasFixedSize(true)
+        resultRecyclerView.isNestedScrollingEnabled = false
         resultRecyclerView.layoutManager = resultRecyclerViewLayoutManager
+
         resultAdapter = ResultViewAdapter()
         resultRecyclerView.adapter = resultAdapter
+
+//        if(realm == null) {
+//            realm = Realm.getInstance(Config().get(context!!))
+//        }
+//
+//        items = realm!!.where(Restaurant::class.java)
+//                .findAllAsync()
+//
+//        Log.e("size", "" + items.size)
+//        //resultAdapter.setData(realmResults)
+//        items.addChangeListener {
+//            result -> resultAdapter.setData(result)
+//        }
+
         //resultAdapter = RestaurantAdapter(context!!, R.layout.list_item_restaurant)
         //resultRecyclerView!!.adapter = resultAdapter
 
@@ -219,10 +242,10 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         menuRecyclerView.setHasFixedSize(true)
         menuRecyclerView.setOnClickListener { v -> nestedScrollView.requestDisallowInterceptTouchEvent(true) }
         bestPlaceLayout = view.findViewById(R.id.best_place_container)
+        cardList.clear()
 
         for(i in 0 until NUMBER_OF_CARD) {
             val m = com.hyunstyle.inhapet.model.Menu()
-
             m.cardString = resources.getString(cardStrings[i])
             m.imagePath = cardImages[i]
             cardList.add(m)
@@ -271,24 +294,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
                 topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
                 viewPager.adapter = topAdViewPagerAdapter
 
-                for (i in 0 until topAdViewPagerAdapter.count) {
-                    val img = ImageView(context!!)
-
-                    if(i == 0)
-                        img.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_pager_selector_activated_12dp))
-                    else
-                        img.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_pager_selector_nonactivated_10dp))
-
-                    val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT))
-
-                    params.setMargins(4, 0, 4, 0)
-
-                    dots.add(img)
-                    sliderDotLayout.addView(dots[i], params)
-                }
-
-                viewPager.addOnPageChangeListener(this)
-                viewPager.setCurrentItem(0, true)
+                createDots(viewPager, topAdViewPagerAdapter)
 
             } else {
                 Log.d("no results", "no image.")
@@ -296,6 +302,28 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         } else {
             Log.e("array", "null!")
         }
+    }
+
+    private fun createDots(viewPager: ViewPager, adapter: TopAdViewPagerAdapter) {
+        dots.clear()
+        for (i in 0 until adapter.count) {
+            val img = ImageView(context!!)
+
+            if(i == 0)
+                img.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_pager_selector_activated_12dp))
+            else
+                img.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_pager_selector_nonactivated_10dp))
+
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+
+            params.setMargins(4, 0, 4, 0)
+
+            dots.add(img)
+            sliderDotLayout.addView(dots[i], params)
+        }
+
+        viewPager.addOnPageChangeListener(this)
+        viewPager.setCurrentItem(0, true)
     }
 
 

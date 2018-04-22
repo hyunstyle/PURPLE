@@ -1,10 +1,12 @@
 package com.hyunstyle.inhapet.adapter;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.hyunstyle.inhapet.R;
 
 /**
@@ -23,6 +25,12 @@ public class ResultViewHolder extends RecyclerView.ViewHolder {
         super(view);
 
         shopImageView = view.findViewById(R.id.shop_image);
+        Glide.with(view.getContext())
+                .load(ContextCompat.getDrawable(view.getContext(), R.drawable.test))
+//                .apply(RequestOptions.bitmapTransform(CropTransformation(Util.dip2px(context, 300f), Util.dip2px(context, 100f),
+//                        CropTransformation.CropType.TOP)))
+                .into(shopImageView);
+
         shopNameTextView = view.findViewById(R.id.shop_name_text);
         shopFamousMenuTextView = view.findViewById(R.id.shop_famous_menu);
         shopNumberOfLikesTextView = view.findViewById(R.id.shop_number_of_like);
