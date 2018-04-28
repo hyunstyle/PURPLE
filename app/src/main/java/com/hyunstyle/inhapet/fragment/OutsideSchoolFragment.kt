@@ -66,7 +66,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
                         .findAllAsync()
 
                 realmResults.addChangeListener {
-                    result -> resultAdapter.setData(result)
+                    result -> resultAdapter!!.setData(result)
                 }
             }
 
@@ -97,7 +97,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     private lateinit var expandAnim: Animation
 
     private lateinit var resultRecyclerView: RecyclerView
-    private lateinit var resultAdapter: ResultViewAdapter
+    private var resultAdapter: ResultViewAdapter? = null
     //private lateinit var resultAdapter: RestaurantAdapter
     private lateinit var resultRecyclerViewLayoutManager: RecyclerView.LayoutManager
 
@@ -155,35 +155,36 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
         Log.e("onstart", "dd")
 
-        topProgressBar.visibility = View.VISIBLE
-        progressBar.visibility = View.VISIBLE
-
         if(urls.size == 0) {
             //val jsonArray: JSONArray? =
+            topProgressBar.visibility = View.VISIBLE
             ImageUrlDownloadingThread(this).execute(resources.getString(R.string.getImageURL), resources.getString(R.string.client))
         } else {
-            topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
-            viewPager.adapter = topAdViewPagerAdapter
-            createDots(viewPager, topAdViewPagerAdapter)
+            if(topAdViewPagerAdapter.count == 0) {
+                topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
+                viewPager.adapter = topAdViewPagerAdapter
+                createDots(viewPager, topAdViewPagerAdapter)
+            }
         }
 
         if(realm == null) {
+            progressBar.visibility = View.VISIBLE
             realm = Realm.getInstance(Config().get(context!!))
-        }
-        // 1 10   11 20   10n - 9 ,  10n
-        items = realm!!.where(Restaurant::class.java)
-                .between("id", pageNumber*itemCount - 9, pageNumber * itemCount)
-                .findAllAsync()
 
-        //resultAdapter.setData(realmResults)
-        items.addChangeListener {
-            result -> kotlin.run {
-            resultAdapter.setData(result)
-            progressBar.visibility = View.GONE
-        }
-        }
+            // 1 10   11 20   10n - 9 ,  10n
+            items = realm!!.where(Restaurant::class.java)
+                    .between("id", pageNumber * itemCount - 9, pageNumber * itemCount)
+                    .findAllAsync()
 
-        //loadMore()
+            //resultAdapter.setData(realmResults)
+            items.addChangeListener { result ->
+                kotlin.run {
+                    resultAdapter!!.setData(result)
+                    progressBar.visibility = View.GONE
+                }
+            }
+
+        }
     }
 
     private fun init(view: View) {
@@ -261,9 +262,11 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         resultRecyclerView.isNestedScrollingEnabled = false
         resultRecyclerView.layoutManager = resultRecyclerViewLayoutManager
 
-        resultAdapter = ResultViewAdapter(context!!)
-        resultAdapter.setHasStableIds(true)
-        resultRecyclerView.adapter = resultAdapter
+        if(resultAdapter == null) {
+            resultAdapter = ResultViewAdapter(context!!)
+            resultAdapter!!.setHasStableIds(true)
+            resultRecyclerView.adapter = resultAdapter
+        }
 
 
         //resultAdapter = RestaurantAdapter(context!!, R.layout.list_item_restaurant)
@@ -276,19 +279,20 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         menuRecyclerView.setHasFixedSize(true)
         menuRecyclerView.setOnClickListener { v -> nestedScrollView.requestDisallowInterceptTouchEvent(true) }
         bestPlaceLayout = view.findViewById(R.id.best_place_container)
-        cardList.clear()
 
-        for(i in 0 until NUMBER_OF_CARD) {
-            val m = com.hyunstyle.inhapet.model.Menu()
-            m.cardString = resources.getString(cardStrings[i])
-            m.imagePath = cardImages[i]
-            cardList.add(m)
+        if(cardList.isEmpty()) {
+            for (i in 0 until NUMBER_OF_CARD) {
+                val m = com.hyunstyle.inhapet.model.Menu()
+                m.cardString = resources.getString(cardStrings[i])
+                m.imagePath = cardImages[i]
+                cardList.add(m)
+            }
+
+            val l = LinearLayoutManager(activity)
+            l.orientation = LinearLayoutManager.HORIZONTAL
+            menuRecyclerView.adapter = CardViewAdapter(cardList, context, this)
+            menuRecyclerView.layoutManager = l
         }
-
-        val l = LinearLayoutManager(activity)
-        l.orientation = LinearLayoutManager.HORIZONTAL
-        menuRecyclerView.adapter = CardViewAdapter(cardList, context, this)
-        menuRecyclerView.layoutManager = l
     }
 
     private fun loadMore() {
@@ -307,7 +311,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         //resultAdapter.setData(realmResults)
         items.addChangeListener {
             result -> kotlin.run {
-            resultAdapter.setData(result)
+            resultAdapter!!.setData(result)
             progressBar.visibility = View.GONE
             }
         }

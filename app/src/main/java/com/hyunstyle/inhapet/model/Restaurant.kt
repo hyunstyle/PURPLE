@@ -15,5 +15,5 @@ open class Restaurant(@PrimaryKey var id: Int? = null,
                       var phone: String? = null,
                       var location: String? = null,
                       var businessHours: String? = null,
-                      var longitude: Float = 0.toFloat(),
-                      var latitude: Float = 0.toFloat()) : RealmObject()
+                      var longitude: Double = 0.toDouble(),
+                      var latitude: Double = 0.toDouble()) : RealmObject()

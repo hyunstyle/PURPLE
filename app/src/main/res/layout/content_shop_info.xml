@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shop_scroll_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/content_background"
     android:fillViewport="true">
 
-    <android.support.design.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -46,13 +47,16 @@
             android:background="@color/black"/>
 
         <LinearLayout
+            android:id="@+id/info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="180dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/shape_round_corners">
+            android:layout_marginStart="@dimen/shop_info_horizontal_margin"
+            android:layout_marginEnd="@dimen/shop_info_horizontal_margin"
+            android:layout_marginBottom="@dimen/shop_info_vertical_margin"
+            android:background="@drawable/shape_round_corners"
+            android:elevation="@dimen/card_margin">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -62,7 +66,9 @@
                     android:id="@+id/shop_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/text_margin"
+                    android:layout_marginStart="@dimen/shop_info_horizontal_margin"
+                    android:layout_marginEnd="@dimen/shop_between_text_margin"
+                    android:gravity="bottom"
                     android:textColor="@color/colorPrimary"
                     android:textSize="20dp"
                     android:text="고로고로"
@@ -76,7 +82,7 @@
                     android:text="일식"
                     android:textColor="@color/black"
                     android:gravity="bottom"
-                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginBottom="2dp"
                     android:layout_toEndOf="@id/shop_name"/>
 
                 <ImageView
@@ -102,7 +108,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/indicator"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="@dimen/shop_info_horizontal_margin"
+                android:layout_marginEnd="@dimen/shop_info_horizontal_margin"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -169,6 +177,7 @@
                     android:text="@string/shop_business_time"/>
 
                 <TextView
+                    android:id="@+id/shop_business_hours"
                     style="@style/shop_text_style"
                     android:text="@string/sample_number"/>
 
@@ -191,6 +200,7 @@
                     android:text="@string/shop_average_price"/>
 
                 <TextView
+                    android:id="@+id/shop_average_prices"
                     style="@style/shop_text_style"
                     android:text="@string/sample_number"/>
 
@@ -225,7 +235,15 @@
 
         </LinearLayout>
 
+        <com.nhn.android.maps.NMapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@id/info_layout"
+            android:layout_marginStart="@dimen/shop_info_horizontal_margin"
+            android:layout_marginEnd="@dimen/shop_info_horizontal_margin"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+
+    </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

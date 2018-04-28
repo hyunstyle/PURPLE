@@ -42,6 +42,10 @@
             android:enabled="true"
             android:exported="true" />
 
+        <activity android:name=".ShopInfoActivity">
+
+        </activity>
+
     </application>
 
 
