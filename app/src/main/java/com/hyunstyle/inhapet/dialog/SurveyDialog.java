@@ -61,7 +61,7 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_survey_dialog);
-
+        getWindow().getAttributes().windowAnimations = R.style.dialog_appear_style;
         typeView = findViewById(R.id.type_grid);
         Button submit = findViewById(R.id.survey_submit);
         Button cancel = findViewById(R.id.survey_cancel);

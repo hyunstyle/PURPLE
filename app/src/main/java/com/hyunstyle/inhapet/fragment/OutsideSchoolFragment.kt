@@ -261,9 +261,10 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         resultRecyclerView.isNestedScrollingEnabled = false
         resultRecyclerView.layoutManager = resultRecyclerViewLayoutManager
 
-        resultAdapter = ResultViewAdapter()
+        resultAdapter = ResultViewAdapter(context!!)
         resultAdapter.setHasStableIds(true)
         resultRecyclerView.adapter = resultAdapter
+
 
         //resultAdapter = RestaurantAdapter(context!!, R.layout.list_item_restaurant)
         //resultRecyclerView!!.adapter = resultAdapter

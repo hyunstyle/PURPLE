@@ -4,6 +4,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,11 +20,13 @@ public class ResultViewHolder extends RecyclerView.ViewHolder {
     private TextView shopNameTextView;
     private TextView shopFamousMenuTextView;
     private TextView shopNumberOfLikesTextView;
+    private RelativeLayout layout;
 
 
     protected ResultViewHolder(View view) {
         super(view);
 
+        layout = view.findViewById(R.id.result_container);
         shopImageView = view.findViewById(R.id.shop_image);
         Glide.with(view.getContext())
                 .load(ContextCompat.getDrawable(view.getContext(), R.drawable.test))
@@ -44,6 +47,10 @@ public class ResultViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getShopNameTextView() {
         return shopNameTextView;
+    }
+
+    public RelativeLayout getLayout() {
+        return layout;
     }
 
     public TextView getShopFamousMenuTextView() {

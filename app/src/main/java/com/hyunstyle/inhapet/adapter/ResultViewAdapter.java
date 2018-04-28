@@ -1,5 +1,7 @@
 package com.hyunstyle.inhapet.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hyunstyle.inhapet.R;
+import com.hyunstyle.inhapet.ShopInfoActivity;
 import com.hyunstyle.inhapet.model.Restaurant;
 
 import java.util.Collections;
@@ -19,9 +22,10 @@ import java.util.List;
 public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
 
     private List<Restaurant> resultList = Collections.emptyList();
+    private Context context;
 
-    public ResultViewAdapter() {
-
+    public ResultViewAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -39,6 +43,14 @@ public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
 
         holder.getShopNameTextView().setText(resultList.get(position).getName());
         holder.getShopFamousMenuTextView().setText(resultList.get(position).getFamousMenu());
+        holder.getLayout().setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.setClass(context, ShopInfoActivity.class);
+            intent.putExtra("pk", resultList.get(position).getId());
+            context.startActivity(intent);
+
+        });
+
     }
 
     public void setData(List<Restaurant> data) {

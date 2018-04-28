@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Realm.setDefaultConfiguration(config);
 
         // Start with a clean slate every time
-        Realm.deleteRealm(config);
+        //Realm.deleteRealm(config);
 
         return Realm.getInstance(config);
     }
