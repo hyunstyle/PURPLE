@@ -33,6 +33,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.hyunstyle.inhapet.adapter.MainViewPagerAdapter;
 import com.hyunstyle.inhapet.dialog.LoadingDialog;
+import com.hyunstyle.inhapet.fragment.BestAndReviewFragment;
 import com.hyunstyle.inhapet.fragment.InsideSchoolFragment;
 import com.hyunstyle.inhapet.fragment.OutsideSchoolFragment;
 import com.hyunstyle.inhapet.fragment.CalculationFragment;
@@ -147,15 +148,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void setViewPager(MainViewPager pager) {
 
-        //pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(2);
 
         OutsideSchoolFragment outsideSchoolFragment = new OutsideSchoolFragment();
+        BestAndReviewFragment bestAndReviewFragment = new BestAndReviewFragment();
         //ResultFragment resultFragment = new ResultFragment();
         CalculationFragment calculationFragment = new CalculationFragment();
         InsideSchoolFragment insideSchoolFragment = new InsideSchoolFragment();
         SettingsFragment settingsFragment = new SettingsFragment();
 
         adapter.addFragment(outsideSchoolFragment);
+        adapter.addFragment(bestAndReviewFragment);
         //adapter.addFragment(resultFragment); // hidden fragment
         adapter.addFragment(calculationFragment);
         adapter.addFragment(insideSchoolFragment);
@@ -272,16 +275,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 //foregroundFragment = new OutsideSchoolFragment();
                 //bottomNavigationView.setSelectedItemId(0);
                 break;
+            case R.id.navigation_best_and_review:
+                viewPager.setCurrentItem(1);
+                break;
             case R.id.navigation_calculation:
-                viewPager.setCurrentItem(1); // Entire List is hidden.
+                viewPager.setCurrentItem(2); // Entire List is hidden.
                 //foregroundFragment = new CalculationFragment();
                 break;
             case R.id.navigation_inside_school:
-                viewPager.setCurrentItem(2);
+                viewPager.setCurrentItem(3);
                 //foregroundFragment = new InsideSchoolFragment();
                 break;
             case R.id.navigation_information:
-                viewPager.setCurrentItem(3);
+                viewPager.setCurrentItem(4);
                 //foregroundFragment = new ResultFragment();
                 break;
         }

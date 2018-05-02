@@ -55,6 +55,7 @@ public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
 
     public void setData(List<Restaurant> data) {
 
+        Log.e("adapter", "" + data.size());
         this.resultList = data;
         notifyDataSetChanged();
 //        notifyItemRangeInserted(prevSize, size);

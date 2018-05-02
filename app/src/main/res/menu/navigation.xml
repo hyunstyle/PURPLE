@@ -7,6 +7,11 @@
         android:title="@string/bottom_outside_school" />
 
     <item
+        android:id="@+id/navigation_best_and_review"
+        android:icon="@drawable/ic_bottom_best_and_review"
+        android:title="@string/bottom_best_and_review" />
+
+    <item
         android:id="@+id/navigation_calculation"
         android:icon="@drawable/ic_bottom_calculation"
         android:title="@string/bottom_calculation" />

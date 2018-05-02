@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.hyunstyle.inhapet.model.Restaurant
@@ -33,40 +34,7 @@ import kotlinx.android.synthetic.main.content_shop_info.*
  */
 
 class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMapPOIdataOverlay.OnStateChangeListener, NMapLocationManager.OnLocationChangeListener {
-    override fun onMapCenterChangeFine(p0: NMapView?) {
 
-    }
-
-    override fun onAnimationStateChange(p0: NMapView?, p1: Int, p2: Int) {
-
-    }
-
-    override fun onMapInitHandler(p0: NMapView?, p1: NMapError?) {
-
-    }
-
-    override fun onZoomLevelChange(p0: NMapView?, p1: Int) {
-
-    }
-
-    override fun onMapCenterChange(p0: NMapView?, p1: NGeoPoint?) {
-    }
-
-    override fun onFocusChanged(p0: NMapPOIdataOverlay?, p1: NMapPOIitem?) {
-    }
-
-    override fun onCalloutClick(p0: NMapPOIdataOverlay?, p1: NMapPOIitem?) {
-    }
-
-    override fun onLocationChanged(p0: NMapLocationManager?, p1: NGeoPoint?): Boolean {
-        return true
-    }
-
-    override fun onLocationUpdateTimeout(p0: NMapLocationManager?) {
-    }
-
-    override fun onLocationUnavailableArea(p0: NMapLocationManager?, p1: NGeoPoint?) {
-    }
 
     private var realm: Realm? = null
     private var restaurant: Restaurant? = null
@@ -93,6 +61,8 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_shop_info)
 
+        init()
+
         //TODO Touchable wrapper not working
         val wrapper = TouchableWrapper(this)
         wrapper.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
@@ -116,6 +86,11 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
 
             //realm.where()
         }
+    }
+
+    private fun init() {
+        var closeButton = findViewById<ImageButton>(R.id.close_button)
+        closeButton.setOnClickListener { view -> onBackPressed() }
     }
 
     private fun initInfo() {
@@ -200,5 +175,40 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
 
     private fun onTouch() {
         nestedScrollView!!.requestDisallowInterceptTouchEvent(true)
+    }
+
+    override fun onMapCenterChangeFine(p0: NMapView?) {
+
+    }
+
+    override fun onAnimationStateChange(p0: NMapView?, p1: Int, p2: Int) {
+
+    }
+
+    override fun onMapInitHandler(p0: NMapView?, p1: NMapError?) {
+
+    }
+
+    override fun onZoomLevelChange(p0: NMapView?, p1: Int) {
+
+    }
+
+    override fun onMapCenterChange(p0: NMapView?, p1: NGeoPoint?) {
+    }
+
+    override fun onFocusChanged(p0: NMapPOIdataOverlay?, p1: NMapPOIitem?) {
+    }
+
+    override fun onCalloutClick(p0: NMapPOIdataOverlay?, p1: NMapPOIitem?) {
+    }
+
+    override fun onLocationChanged(p0: NMapLocationManager?, p1: NGeoPoint?): Boolean {
+        return true
+    }
+
+    override fun onLocationUpdateTimeout(p0: NMapLocationManager?) {
+    }
+
+    override fun onLocationUnavailableArea(p0: NMapLocationManager?, p1: NGeoPoint?) {
     }
 }

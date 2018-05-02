@@ -115,6 +115,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     private val NUMBER_OF_CARD: Int = cardImages.size
     private var cardList: ArrayList<com.hyunstyle.inhapet.model.Menu> = ArrayList()
     private lateinit var menuRecyclerView: RecyclerView
+    private var menuAdapter: CardViewAdapter? = null
 
     private lateinit var bestPlaceLayout: LinearLayout
     private var pageNumber: Int = 1
@@ -162,6 +163,9 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         } else {
             if(topAdViewPagerAdapter.count == 0) {
                 topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
+                viewPager.adapter = topAdViewPagerAdapter
+                createDots(viewPager, topAdViewPagerAdapter)
+            } else {
                 viewPager.adapter = topAdViewPagerAdapter
                 createDots(viewPager, topAdViewPagerAdapter)
             }
@@ -266,6 +270,8 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
             resultAdapter = ResultViewAdapter(context!!)
             resultAdapter!!.setHasStableIds(true)
             resultRecyclerView.adapter = resultAdapter
+        } else {
+            resultRecyclerView.adapter = resultAdapter
         }
 
 
@@ -288,9 +294,15 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
                 cardList.add(m)
             }
 
+            menuAdapter = CardViewAdapter(cardList, context, this)
             val l = LinearLayoutManager(activity)
             l.orientation = LinearLayoutManager.HORIZONTAL
-            menuRecyclerView.adapter = CardViewAdapter(cardList, context, this)
+            menuRecyclerView.adapter = menuAdapter
+            menuRecyclerView.layoutManager = l
+        } else {
+            val l = LinearLayoutManager(activity)
+            l.orientation = LinearLayoutManager.HORIZONTAL
+            menuRecyclerView.adapter = menuAdapter
             menuRecyclerView.layoutManager = l
         }
     }

@@ -17,7 +17,7 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:layout_marginTop="@dimen/card_margin"
-            android:elevation="4dp">
+            android:elevation="2dp">
 
             <TextView
                 style="@style/app_bar_text_style"
@@ -116,14 +116,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginBottom="@dimen/shop_info_vertical_margin"
                 android:layout_marginStart="@dimen/shop_info_horizontal_margin"
                 android:layout_marginEnd="@dimen/shop_info_horizontal_margin">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_expand_16dp" />
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="2dp"
+                    android:src="@drawable/ic_call_number" />
 
                 <TextView
                     style="@style/shop_text_style"
@@ -140,14 +142,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginBottom="@dimen/shop_info_vertical_margin"
                 android:layout_marginStart="@dimen/shop_info_horizontal_margin"
                 android:layout_marginEnd="@dimen/shop_info_horizontal_margin">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_expand_16dp" />
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="2dp"
+                    android:src="@drawable/ic_location" />
 
                 <TextView
                     style="@style/shop_text_style"
@@ -163,14 +167,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginBottom="@dimen/shop_info_vertical_margin"
                 android:layout_marginStart="@dimen/shop_info_horizontal_margin"
                 android:layout_marginEnd="@dimen/shop_info_horizontal_margin">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_expand_16dp" />
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="2dp"
+                    android:src="@drawable/ic_business_hours" />
 
                 <TextView
                     style="@style/shop_text_style"
@@ -186,14 +192,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginBottom="@dimen/shop_info_vertical_margin"
                 android:layout_marginStart="@dimen/shop_info_horizontal_margin"
                 android:layout_marginEnd="@dimen/shop_info_horizontal_margin">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_expand_16dp" />
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="2dp"
+                    android:src="@drawable/ic_average_price" />
 
                 <TextView
                     style="@style/shop_text_style"
