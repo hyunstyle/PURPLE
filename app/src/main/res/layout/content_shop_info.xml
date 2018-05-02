@@ -60,7 +60,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/shop_name"
@@ -70,7 +70,7 @@
                     android:layout_marginEnd="@dimen/shop_between_text_margin"
                     android:gravity="bottom"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="20dp"
+                    android:textSize="24dp"
                     android:text="고로고로"
                     android:textStyle="bold"/>
 
@@ -246,11 +246,44 @@
         <com.nhn.android.maps.NMapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="@dimen/map_height"
             android:layout_below="@id/info_layout"
             android:layout_marginStart="@dimen/shop_info_horizontal_margin"
             android:layout_marginEnd="@dimen/shop_info_horizontal_margin"/>
 
+        <LinearLayout
+            android:id="@+id/wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/map_height"
+            android:orientation="vertical"
+            android:layout_below="@id/info_layout"
+            android:background="@color/transparent"/>
+
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginBottom="@dimen/card_margin"
+            android:layout_below="@id/wrapper"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        </com.google.android.gms.ads.AdView>
+
+        <Button
+            android:id="@+id/shop_register_review_button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/shop_info_horizontal_margin"
+            android:layout_marginEnd="@dimen/shop_info_horizontal_margin"
+            android:layout_below="@id/adView"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/shop_register_review"
+            android:textStyle="bold"/>
 
     </RelativeLayout>
 

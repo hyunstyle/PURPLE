@@ -1,6 +1,7 @@
 package com.hyunstyle.inhapet
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.NestedScrollView
@@ -8,10 +9,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.hyunstyle.inhapet.model.Restaurant
 import com.hyunstyle.inhapet.navermap.NMapPOIflagType
 import com.hyunstyle.inhapet.navermap.NMapViewerResourceProvider
@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.content_shop_info.*
  * Created by sh on 2018-04-28.
  */
 
-class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMapPOIdataOverlay.OnStateChangeListener, NMapLocationManager.OnLocationChangeListener {
+class ShopInfoActivity : NMapActivity() {
 
 
     private var realm: Realm? = null
@@ -51,7 +51,8 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
     private var nMapController: NMapController? = null
     private var nMapViewerResourceProvider: NMapViewerResourceProvider? = null
     private var nMapOverlayManager: NMapOverlayManager? = null
-    private var nMapLocationManager: NMapLocationManager? = null
+    private lateinit var wrapper: LinearLayout
+    private lateinit var adView: AdView
 
     //private var mListener: OnTouchListener? = null
 
@@ -64,11 +65,11 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
         init()
 
         //TODO Touchable wrapper not working
-        val wrapper = TouchableWrapper(this)
-        wrapper.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
-
-        val rootView = window.decorView.rootView as ViewGroup
-        rootView.addView(wrapper, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+//        val wrapper = TouchableWrapper(this)
+//        wrapper.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
+//
+//        val rootView = window.decorView.rootView as ViewGroup
+//        rootView.addView(wrapper, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
         if (realm == null) {
             realm = Realm.getInstance(Config().get(this))
@@ -82,15 +83,18 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
             } else {
                 initInfo()
             }
-            //realm.where()
-
-            //realm.where()
         }
     }
 
     private fun init() {
-        var closeButton = findViewById<ImageButton>(R.id.close_button)
+        val closeButton = findViewById<ImageButton>(R.id.close_button)
         closeButton.setOnClickListener { view -> onBackPressed() }
+        val reviewButton = findViewById<Button>(R.id.shop_register_review_button)
+        //reviewButton.setOnClickListener { view ->  }
+
+        adView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     private fun initInfo() {
@@ -122,17 +126,20 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
 
         mapView = findViewById(R.id.map_view)
         mapView.setClientId(resources.getString(R.string.api_key))
-        mapView.isClickable = true
-
-        mapView.setBuiltInZoomControls(true, null)
-        mapView.setOnMapStateChangeListener(this)
+        wrapper = findViewById(R.id.wrapper)
+        wrapper.setOnClickListener { click -> kotlin.run {
+            val intent = Intent()
+            intent.setClass(this, MapActivity::class.java)
+            intent.putExtra(resources.getString(R.string.map_longitude), longitude)
+            intent.putExtra(resources.getString(R.string.map_latitude), latitude)
+            intent.putExtra(resources.getString(R.string.map_shop_name), restaurant!!.name)
+            startActivity(intent)
+        } }
 
         nMapController = mapView.mapController
         nMapViewerResourceProvider = NMapViewerResourceProvider(this)
         nMapOverlayManager = NMapOverlayManager(this, mapView, nMapViewerResourceProvider)
 
-        nMapLocationManager = NMapLocationManager(this)
-        nMapLocationManager!!.setOnLocationChangeListener(this)
         //nMapLocationManager!!.enableMyLocation(false)
     }
 
@@ -151,19 +158,18 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
 
         val poiDataOverlay = nMapOverlayManager!!.createPOIdataOverlay(poiData, null)
         poiDataOverlay.showAllPOIdata(0)
-        poiDataOverlay.onStateChangeListener = this
     }
 
-    private inner class TouchableWrapper(context: Context) : FrameLayout(context) {
-
-        override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> onTouch()
-                MotionEvent.ACTION_UP -> onTouch()
-            }
-            return super.dispatchTouchEvent(event)
-        }
-    }
+//    private inner class TouchableWrapper(context: Context) : FrameLayout(context) {
+//
+//        override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+//            when (event.action) {
+//                MotionEvent.ACTION_DOWN -> onTouch()
+//                MotionEvent.ACTION_UP -> onTouch()
+//            }
+//            return super.dispatchTouchEvent(event)
+//        }
+//    }
 
 //    private fun setListener(listener: OnTouchListener) {
 //        mListener = listener
@@ -173,42 +179,8 @@ class ShopInfoActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMap
 //        fun onTouch()
 //    }
 
-    private fun onTouch() {
-        nestedScrollView!!.requestDisallowInterceptTouchEvent(true)
-    }
+//    private fun onTouch() {
+//        nestedScrollView!!.requestDisallowInterceptTouchEvent(true)
+//    }
 
-    override fun onMapCenterChangeFine(p0: NMapView?) {
-
-    }
-
-    override fun onAnimationStateChange(p0: NMapView?, p1: Int, p2: Int) {
-
-    }
-
-    override fun onMapInitHandler(p0: NMapView?, p1: NMapError?) {
-
-    }
-
-    override fun onZoomLevelChange(p0: NMapView?, p1: Int) {
-
-    }
-
-    override fun onMapCenterChange(p0: NMapView?, p1: NGeoPoint?) {
-    }
-
-    override fun onFocusChanged(p0: NMapPOIdataOverlay?, p1: NMapPOIitem?) {
-    }
-
-    override fun onCalloutClick(p0: NMapPOIdataOverlay?, p1: NMapPOIitem?) {
-    }
-
-    override fun onLocationChanged(p0: NMapLocationManager?, p1: NGeoPoint?): Boolean {
-        return true
-    }
-
-    override fun onLocationUpdateTimeout(p0: NMapLocationManager?) {
-    }
-
-    override fun onLocationUnavailableArea(p0: NMapLocationManager?, p1: NGeoPoint?) {
-    }
 }

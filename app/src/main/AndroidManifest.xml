@@ -43,8 +43,9 @@
             android:exported="true" />
 
         <activity android:name=".ShopInfoActivity">
-
         </activity>
+
+        <activity android:name=".MapActivity"/>
 
     </application>
 
