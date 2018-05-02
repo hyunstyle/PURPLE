@@ -39,7 +39,6 @@ class RestaurantAdapter(val context: Context,
             itemView = LayoutInflater.from(context).inflate(this.viewId, null)
             holder = ViewHolder()
             holder.name = itemView.findViewById(R.id.restaurant_name)
-            holder.phone = itemView.findViewById(R.id.restaurant_phone)
 
             itemView.tag = holder
 
@@ -59,18 +58,15 @@ class RestaurantAdapter(val context: Context,
 
     fun setData(i: List<Restaurant>) {
 
-        Log.e("datad", "data received " + i.size)
         this.items = i
         notifyDataSetChanged()
     }
 
     private class ViewHolder {
         var name: TextView? = null
-        var phone: TextView? = null
 
         fun bind(restaurant: Restaurant) {
             name!!.text = restaurant.name
-            phone!!.text = restaurant.phone
         }
     }
 }

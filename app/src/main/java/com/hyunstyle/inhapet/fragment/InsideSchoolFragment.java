@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hyunstyle.inhapet.R;
+import com.hyunstyle.inhapet.model.Restaurant;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +21,13 @@ import com.hyunstyle.inhapet.R;
 public class InsideSchoolFragment extends Fragment {
 
     public InsideSchoolFragment() {
+
+        List<Restaurant> list = new ArrayList<>();
+
+        List<String> nameList = new ArrayList<>();
+        for(Restaurant item : list) {
+            nameList.add(item.getName());
+        }
         // Required empty public constructor
     }
 

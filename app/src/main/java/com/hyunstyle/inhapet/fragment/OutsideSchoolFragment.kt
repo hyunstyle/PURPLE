@@ -22,10 +22,7 @@ import com.hyunstyle.inhapet.Config
 import com.hyunstyle.inhapet.GridScrollLayoutManager
 
 import com.hyunstyle.inhapet.R
-import com.hyunstyle.inhapet.adapter.CardViewAdapter
-import com.hyunstyle.inhapet.adapter.RestaurantAdapter
-import com.hyunstyle.inhapet.adapter.ResultViewAdapter
-import com.hyunstyle.inhapet.adapter.TopAdViewPagerAdapter
+import com.hyunstyle.inhapet.adapter.*
 import com.hyunstyle.inhapet.dialog.LoadingDialog
 import com.hyunstyle.inhapet.dialog.SurveyDialog
 import com.hyunstyle.inhapet.interfaces.AsyncTaskResponse
@@ -33,6 +30,7 @@ import com.hyunstyle.inhapet.model.Restaurant
 import com.hyunstyle.inhapet.thread.ImageUrlDownloadingThread
 import io.realm.Realm
 import io.realm.RealmResults
+import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
@@ -85,6 +83,11 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     }
 
     private lateinit var appTitleView: ImageView
+    private lateinit var searchButton: ImageButton
+    private lateinit var semiTransparentLayout: RelativeLayout
+    private lateinit var autoCompleteTextView: AutoCompleteTextView
+    private var autoCompleteAdapter: AutoCompleteListAdapter? = null
+    private var decorViewBasicFlag: Int = 0
     private lateinit var nestedScrollView: NestedScrollView
     private lateinit var topProgressBar: ProgressBar
     private lateinit var progressBar: ProgressBar
@@ -136,6 +139,8 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 //        Log.e("cacheSize", "" + cacheSize)
 
         //----------------------------------------------
+
+        decorViewBasicFlag = activity!!.window.decorView.systemUiVisibility
 
         init(view)
 
@@ -191,6 +196,15 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         }
     }
 
+    override fun onStop() {
+        if(semiTransparentLayout.visibility == View.VISIBLE) {
+            semiTransparentLayout.visibility = View.GONE
+            bottom_navigation.visibility = View.VISIBLE
+        }
+
+        super.onStop()
+    }
+
     private fun init(view: View) {
 //        restaurantListView = view.findViewById(R.id.restaurant_list)
 //        adapter = RestaurantAdapter(context!!, R.layout.list_item_restaurant)
@@ -198,6 +212,34 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 //        realm = Realm.getInstance(Config().get(context!!))
 
         appTitleView = view.findViewById(R.id.app_title)
+        searchButton = view.findViewById(R.id.search_button)
+        semiTransparentLayout = view.findViewById(R.id.semi_transparent_layout)
+        autoCompleteTextView = view.findViewById(R.id.search_auto_complete_view)
+        searchButton.setOnClickListener { v -> kotlin.run {
+            if(semiTransparentLayout.visibility == View.GONE) {
+
+
+                val decorView = activity!!.window.decorView
+// Hide both the navigation bar and the status bar.
+// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+// a general rule, you should design your app to hide the status bar whenever you
+// hide the navigation bar.
+                val uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                //decorView.systemUiVisibility = uiOptions
+
+                semiTransparentLayout.bringToFront()
+                semiTransparentLayout.setOnClickListener { click -> kotlin.run {
+                    //decorView.systemUiVisibility = decorViewBasicFlag
+                    semiTransparentLayout.visibility = View.GONE
+                } }
+                semiTransparentLayout.animation = AnimationUtils.loadAnimation(context!!, R.anim.anim_fade_in)
+                semiTransparentLayout.visibility = View.VISIBLE
+                findAll()
+            }
+        } }
+
         nestedScrollView = view.findViewById(R.id.outside_scroll_view)
         nestedScrollView.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
@@ -378,6 +420,10 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
     private fun createDots(viewPager: ViewPager, adapter: TopAdViewPagerAdapter) {
         dots.clear()
+        if(sliderDotLayout.childCount > 0) {
+            sliderDotLayout.removeAllViews()
+        }
+
         for (i in 0 until adapter.count) {
             val img = ImageView(context!!)
 
@@ -391,6 +437,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
             params.setMargins(4, 0, 4, 0)
 
             dots.add(img)
+
             sliderDotLayout.addView(dots[i], params)
         }
 
@@ -399,13 +446,23 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     }
 
 
-    private fun createRestaurantList() {
-        items = realm!!.where<Restaurant>(Restaurant::class.java).sort("id").findAllAsync() // 비동기로 찾기 종료시 addChangeListener 1회 실행
-//        realm.where<Restaurant>(Restaurant::class.java).in("subCategory", dots)
-        Log.e("size", "" + items.size)
+    private fun findAll() {
+        if(autoCompleteAdapter == null) {
+            items = realm!!.where<Restaurant>(Restaurant::class.java).findAllAsync() // 비동기로 찾기 종료시 addChangeListener 1회 실행
+        } else {
+            autoCompleteTextView.setAdapter(autoCompleteAdapter)
+        }
 
         items.addChangeListener {
-            result -> adapter.setData(result)
+            result -> kotlin.run {
+
+            val nameList = java.util.ArrayList<String>()
+
+            result.asSequence().mapTo(nameList, {it.name.toString()})
+            autoCompleteAdapter = AutoCompleteListAdapter(context!!, R.layout.list_item_restaurant, nameList)
+
+            autoCompleteTextView.setAdapter(autoCompleteAdapter)
+        }
         }
     }
 

@@ -14,6 +14,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 
 import com.hyunstyle.inhapet.R
 
@@ -25,6 +27,7 @@ class BestAndReviewFragment : Fragment() {
 
     private var viewPager: ViewPager? = null
     private var viewPagerAdapter: SectionsPagerAdapter? = null
+    private lateinit var appTitleView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +42,17 @@ class BestAndReviewFragment : Fragment() {
 
         init(v)
 
+        Glide.with(context!!)
+                .load(ContextCompat.getDrawable(context!!, R.drawable.ic_banner))
+//                .apply(RequestOptions.bitmapTransform(CropTransformation(Util.dip2px(context, 300f), Util.dip2px(context, 100f),
+//                        CropTransformation.CropType.TOP)))
+                .into(appTitleView)
+
         return v
     }
 
     private fun init(view: View) {
+        appTitleView = view.findViewById(R.id.app_title)
         viewPager = view.findViewById(R.id.best_and_review_view_pager)
         if(viewPagerAdapter == null) {
             viewPagerAdapter = SectionsPagerAdapter(childFragmentManager)

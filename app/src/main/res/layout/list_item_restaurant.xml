@@ -2,38 +2,17 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="40dp"
     android:orientation="horizontal"
     android:padding="5dp">
 
-    <ImageView
-        android:id="@+id/restaurant_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/tempimage"/>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/restaurant_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_toEndOf="@+id/restaurant_image"
-        android:gravity="center_vertical">
-        <TextView
-            android:id="@+id/restaurant_name"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginStart="5dp"
-            android:text="가게이름"/>
-
-        <TextView
-            android:id="@+id/restaurant_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:text="032-222-2222"
-            android:textSize="12dp"
-            android:layout_marginStart="5dp"/>
-    </LinearLayout>
-
+        android:layout_marginStart="5dp"
+        android:gravity="center_vertical"
+        android:text="가게이름"/>
 
     <ImageView
         android:layout_width="wrap_content"
