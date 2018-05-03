@@ -249,7 +249,8 @@
             android:layout_height="@dimen/map_height"
             android:layout_below="@id/info_layout"
             android:layout_marginStart="@dimen/shop_info_horizontal_margin"
-            android:layout_marginEnd="@dimen/shop_info_horizontal_margin"/>
+            android:layout_marginEnd="@dimen/shop_info_horizontal_margin"
+            android:elevation="4dp"/>
 
         <LinearLayout
             android:id="@+id/wrapper"
@@ -260,30 +261,39 @@
             android:background="@color/transparent"/>
 
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/card_margin"
-            android:layout_marginBottom="@dimen/card_margin"
-            android:layout_below="@id/wrapper"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
-        </com.google.android.gms.ads.AdView>
+        <!--<com.google.android.gms.ads.AdView-->
+            <!--xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+            <!--android:id="@+id/adView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/card_margin"-->
+            <!--android:layout_marginBottom="@dimen/card_margin"-->
+            <!--android:layout_below="@id/wrapper"-->
+            <!--ads:adSize="SMART_BANNER"-->
+            <!--ads:adUnitId="ca-app-pub-3940256099942544/6300978111">-->
+        <!--</com.google.android.gms.ads.AdView>-->
 
         <Button
             android:id="@+id/shop_register_review_button"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginBottom="@dimen/card_margin"
             android:layout_marginStart="@dimen/shop_info_horizontal_margin"
             android:layout_marginEnd="@dimen/shop_info_horizontal_margin"
-            android:layout_below="@id/adView"
+            android:layout_below="@id/wrapper"
             android:background="@color/white"
             android:elevation="4dp"
             android:textColor="@color/colorPrimary"
             android:text="@string/shop_register_review"
             android:textStyle="bold"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/shop_register_review_button">
+
+        </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
 

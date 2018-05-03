@@ -92,9 +92,9 @@ class ShopInfoActivity : NMapActivity() {
         val reviewButton = findViewById<Button>(R.id.shop_register_review_button)
         //reviewButton.setOnClickListener { view ->  }
 
-        adView = findViewById(R.id.adView)
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+//        adView = findViewById(R.id.adView)
+//        val adRequest = AdRequest.Builder().build()
+//        adView.loadAd(adRequest)
     }
 
     private fun initInfo() {
@@ -126,6 +126,8 @@ class ShopInfoActivity : NMapActivity() {
 
         mapView = findViewById(R.id.map_view)
         mapView.setClientId(resources.getString(R.string.api_key))
+        mapView.setScalingFactor(2.0f, false)
+
         wrapper = findViewById(R.id.wrapper)
         wrapper.setOnClickListener { click -> kotlin.run {
             val intent = Intent()
@@ -157,7 +159,9 @@ class ShopInfoActivity : NMapActivity() {
         poiData.endPOIdata()
 
         val poiDataOverlay = nMapOverlayManager!!.createPOIdataOverlay(poiData, null)
-        poiDataOverlay.showAllPOIdata(0)
+        //poiDataOverlay.showAllPOIdata(0)
+
+
     }
 
 //    private inner class TouchableWrapper(context: Context) : FrameLayout(context) {

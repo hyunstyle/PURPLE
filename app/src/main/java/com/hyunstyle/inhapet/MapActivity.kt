@@ -65,8 +65,8 @@ class MapActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMapPOIda
         mapView = findViewById(R.id.map_view)
         mapView.setClientId(resources.getString(R.string.api_key))
         mapView.isClickable = true
+        mapView.setScalingFactor(2.0f, false)
 
-        mapView.setBuiltInZoomControls(true, null)
         mapView.setOnMapStateChangeListener(this)
 
         nMapController = mapView.mapController
@@ -92,7 +92,7 @@ class MapActivity : NMapActivity(), NMapView.OnMapStateChangeListener, NMapPOIda
         poiData.endPOIdata()
 
         val poiDataOverlay = nMapOverlayManager!!.createPOIdataOverlay(poiData, null)
-        poiDataOverlay.showAllPOIdata(0)
+        //poiDataOverlay.showAllPOIdata(0)
         poiDataOverlay.onStateChangeListener = this
     }
 
