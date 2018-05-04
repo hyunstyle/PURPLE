@@ -89,8 +89,13 @@ class ShopInfoActivity : NMapActivity() {
     private fun init() {
         val closeButton = findViewById<ImageButton>(R.id.close_button)
         closeButton.setOnClickListener { view -> onBackPressed() }
-        val reviewButton = findViewById<Button>(R.id.shop_register_review_button)
-        //reviewButton.setOnClickListener { view ->  }
+
+        shopName = findViewById(R.id.shop_name)
+        shopPhoneNumber = findViewById(R.id.shop_calling_number)
+        shopAddress = findViewById(R.id.shop_address)
+        shopBusinessHours = findViewById(R.id.shop_business_hours)
+        shopAveragePrices = findViewById(R.id.shop_average_prices)
+        nestedScrollView = findViewById(R.id.shop_scroll_container)
 
 //        adView = findViewById(R.id.adView)
 //        val adRequest = AdRequest.Builder().build()
@@ -99,20 +104,19 @@ class ShopInfoActivity : NMapActivity() {
 
     private fun initInfo() {
 
-        shopName = findViewById(R.id.shop_name)
-        shopPhoneNumber = findViewById(R.id.shop_calling_number)
-        shopAddress = findViewById(R.id.shop_address)
-        shopBusinessHours = findViewById(R.id.shop_business_hours)
-        shopAveragePrices = findViewById(R.id.shop_average_prices)
-
         shopName.text = restaurant!!.name
+        val reviewButton = findViewById<Button>(R.id.shop_register_review_button)
+        reviewButton.setOnClickListener { view -> kotlin.run {
+            val intent = Intent()
+            intent.setClass(this, ReviewActivity::class.java)
+            intent.putExtra(resources.getString(R.string.map_shop_name), restaurant!!.name)
+            startActivity(intent)
+        } }
         shopPhoneNumber.text = restaurant!!.phone
         shopAddress.text = restaurant!!.location
         shopBusinessHours.text = restaurant!!.businessHours
         longitude = restaurant!!.longitude
         latitude = restaurant!!.latitude
-
-        nestedScrollView = findViewById(R.id.shop_scroll_container)
 
         //setListener(scrollContainer.requestDisallowInterceptTouchEvent(true))
 

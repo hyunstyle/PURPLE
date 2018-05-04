@@ -109,7 +109,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     private lateinit var items: RealmResults<Restaurant>
 
     private lateinit var viewPager: ViewPager
-    private lateinit var topAdViewPagerAdapter: TopAdViewPagerAdapter
+    private var topAdViewPagerAdapter: TopAdViewPagerAdapter? = null
     private lateinit var sliderDotLayout: LinearLayout
     private var dots: ArrayList<ImageView> = ArrayList()
 
@@ -166,13 +166,13 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
             topProgressBar.visibility = View.VISIBLE
             ImageUrlDownloadingThread(this).execute(resources.getString(R.string.getImageURL), resources.getString(R.string.client))
         } else {
-            if(topAdViewPagerAdapter.count == 0) {
+            if(topAdViewPagerAdapter == null) {
                 topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
                 viewPager.adapter = topAdViewPagerAdapter
-                createDots(viewPager, topAdViewPagerAdapter)
+                createDots(viewPager, topAdViewPagerAdapter!!)
             } else {
                 viewPager.adapter = topAdViewPagerAdapter
-                createDots(viewPager, topAdViewPagerAdapter)
+                createDots(viewPager, topAdViewPagerAdapter!!)
             }
         }
 
@@ -406,7 +406,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
                 topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
                 viewPager.adapter = topAdViewPagerAdapter
 
-                createDots(viewPager, topAdViewPagerAdapter)
+                createDots(viewPager, topAdViewPagerAdapter!!)
 
                 topProgressBar.visibility = View.GONE
 
