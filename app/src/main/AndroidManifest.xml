@@ -49,6 +49,7 @@
 
         <activity android:name=".MapActivity"/>
         <activity android:name=".ReviewActivity"/>
+        <activity android:name=".GalleryActivity"/>
 
     </application>
 

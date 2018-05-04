@@ -1,22 +1,13 @@
 package com.hyunstyle.inhapet.adapter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.support.constraint.ConstraintLayout
 import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.hyunstyle.inhapet.GlideApp
-import com.hyunstyle.inhapet.Util
-import com.hyunstyle.inhapet.util.RatioImageView
-import jp.wasabeef.glide.transformations.CropTransformation
 
 import java.util.ArrayList
 

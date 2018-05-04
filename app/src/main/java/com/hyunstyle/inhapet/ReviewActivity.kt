@@ -72,12 +72,13 @@ class ReviewActivity : AppCompatActivity() {
         } else {
             Log.e("permission", "있음")
 
-            val intent = Intent()
-            intent.type = "image/*"
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            intent.action = Intent.ACTION_GET_CONTENT
-            intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-            startActivityForResult(Intent.createChooser(intent, resources.getString(R.string.review_select_if)), 100)
+            val intent = Intent(this, GalleryActivity::class.java)
+            startActivityForResult(intent, 200)
+//            intent.type = "image/*"
+//            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//            intent.action = Intent.ACTION_GET_CONTENT
+//            intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+//            startActivityForResult(Intent.createChooser(intent, resources.getString(R.string.review_select_if)), 100)
         }
 
     }
@@ -94,12 +95,14 @@ class ReviewActivity : AppCompatActivity() {
             }
 
             if(isGranted) {
-                val intent = Intent()
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                intent.action = Intent.ACTION_GET_CONTENT
-                intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-                startActivityForResult(Intent.createChooser(intent, resources.getString(R.string.review_select_if)), 100)
+                val intent = Intent(this, GalleryActivity::class.java)
+                startActivityForResult(intent, 200)
+//                val intent = Intent()
+//                intent.type = "image/*"
+//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//                intent.action = Intent.ACTION_GET_CONTENT
+//                intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+//                startActivityForResult(Intent.createChooser(intent, resources.getString(R.string.review_select_if)), 100)
 
             } else {
                 Toast.makeText(this, "권한없음", Toast.LENGTH_SHORT).show()
