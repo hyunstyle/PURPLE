@@ -39,7 +39,7 @@ public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
     @Override
     public void onBindViewHolder(ResultViewHolder holder, int position) {
         //TODO : shop 이미지, 좋아요 없음
-        //holder.getShopImageView().setImageResource(resultList.get(position).get);
+        //holder.getThumbnail().setImageResource(resultList.get(position).get);
 
         holder.getShopNameTextView().setText(resultList.get(position).getName());
         holder.getShopFamousMenuTextView().setText(resultList.get(position).getFamousMenu());
