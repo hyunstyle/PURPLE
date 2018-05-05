@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
-    <solid android:color="@color/colorPrimary"/>
-    <size android:height="@dimen/dialog_list_item_height" android:width="@dimen/dialog_list_item_width"/>
-    <corners android:radius="20dip"/>
-    <!--<stroke android:width="1px" android:color="#ff9c0e"/>-->
-</shape>
