@@ -2,6 +2,10 @@ package com.hyunstyle.inhapet.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +28,14 @@ import java.util.List;
  */
 public class AutoCompleteListAdapter extends ArrayAdapter {
 
-    private List<String> dataList;
+    private List<SpannableStringBuilder> dataList;
     private Context mContext;
     private int itemLayout;
 
     private ListFilter listFilter = new ListFilter();
     private List<String> dataListAllItems;
 
-    public AutoCompleteListAdapter(Context context, int resource, List<String> dataList) {
+    public AutoCompleteListAdapter(Context context, int resource, List<SpannableStringBuilder> dataList) {
         super(context, resource, dataList);
         this.dataList = dataList;
         mContext = context;
@@ -44,9 +48,8 @@ public class AutoCompleteListAdapter extends ArrayAdapter {
     }
 
     @Override
-    public String getItem(int position) {
-        Log.d("CustomListAdapter",
-                dataList.get(position));
+    public SpannableStringBuilder getItem(int position) {
+
         return dataList.get(position);
     }
 
@@ -58,8 +61,8 @@ public class AutoCompleteListAdapter extends ArrayAdapter {
                     .inflate(itemLayout, parent, false);
         }
 
-        TextView strName = view.findViewById(R.id.restaurant_name);
-        strName.setText(getItem(position));
+        TextView strName = view.findViewById(R.id.item_restaurant_name);
+        strName.setText(getItem(position), TextView.BufferType.SPANNABLE);
         return view;
     }
 
@@ -77,28 +80,49 @@ public class AutoCompleteListAdapter extends ArrayAdapter {
             FilterResults results = new FilterResults();
             if (dataListAllItems == null) {
                 synchronized (lock) {
-                    dataListAllItems = new ArrayList<String>(dataList);
+                    dataListAllItems = new ArrayList<String>();
+                    for(SpannableStringBuilder data : dataList) {
+                        dataListAllItems.add(data.toString());
+                    }
                 }
             }
 
             if (prefix == null || prefix.length() == 0) {
                 synchronized (lock) {
-                    results.values = dataListAllItems;
-                    results.count = dataListAllItems.size();
+                    results.values = null;
+                    results.count = 0;
                 }
             } else {
                 final String searchStrLowerCase = prefix.toString().toLowerCase();
 
                 ArrayList<String> matchValues = new ArrayList<String>();
+                ArrayList<SpannableStringBuilder> buildersList = new ArrayList<>();
 
                 for (String dataItem : dataListAllItems) {
                     if (dataItem.toLowerCase().startsWith(searchStrLowerCase)) {
+                        SpannableStringBuilder sp = new SpannableStringBuilder(dataItem);
+                        sp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.colorPrimary)),
+                                dataItem.toLowerCase().indexOf(searchStrLowerCase), (dataItem.toLowerCase().indexOf(searchStrLowerCase) + searchStrLowerCase.length()), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                        //dataItem.indexOf(searchStrLowerCase)
                         matchValues.add(dataItem);
+                        buildersList.add(sp);
                     }
                 }
 
-                results.values = matchValues;
-                results.count = matchValues.size();
+                for(String dataItem : dataListAllItems) {
+                    if(!matchValues.contains(dataItem) && dataItem.toLowerCase().contains(searchStrLowerCase)) {
+                        SpannableStringBuilder sp = new SpannableStringBuilder(dataItem);
+                        sp.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.colorPrimary)),
+                                dataItem.toLowerCase().indexOf(searchStrLowerCase), (dataItem.toLowerCase().indexOf(searchStrLowerCase) + searchStrLowerCase.length()), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                            //dataItem.indexOf(searchStrLowerCase)
+                        matchValues.add(dataItem);
+                        buildersList.add(sp);
+                    }
+                }
+
+
+                results.values = buildersList;
+                results.count = buildersList.size();
             }
 
             return results;
@@ -107,7 +131,7 @@ public class AutoCompleteListAdapter extends ArrayAdapter {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             if (results.values != null) {
-                dataList = (ArrayList<String>)results.values;
+                dataList = (ArrayList<SpannableStringBuilder>)results.values;
             } else {
                 dataList = null;
             }

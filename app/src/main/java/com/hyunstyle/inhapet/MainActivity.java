@@ -40,6 +40,8 @@ import com.hyunstyle.inhapet.fragment.CalculationFragment;
 import com.hyunstyle.inhapet.fragment.ResultFragment;
 import com.hyunstyle.inhapet.fragment.SettingsFragment;
 import com.hyunstyle.inhapet.interfaces.AsyncTaskResponse;
+import com.hyunstyle.inhapet.model.Alcohol;
+import com.hyunstyle.inhapet.model.Cafe;
 import com.hyunstyle.inhapet.model.Restaurant;
 import com.hyunstyle.inhapet.service.ServiceView;
 import com.hyunstyle.inhapet.thread.DataDownloadingThread;
@@ -111,8 +113,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             loadingDialog = new LoadingDialog(context);
             loadingDialog.show();
 
-            new DataDownloadingThread(this).
-                    execute(getResources().getString(R.string.downloadURL), getResources().getString(R.string.client), uniqueId);
+            for(int i = 0; i<=3; i++) {
+                new DataDownloadingThread(this, i).
+                        execute(getResources().getString(R.string.downloadURL),
+                                getResources().getString(R.string.client), uniqueId, getResources().getString(R.string.loader));
+            }
         }
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -353,19 +358,54 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
-    public void finished(@NotNull JSONArray output) {
+    public void finished(@NotNull JSONArray output, int type) {
 
         Gson gson = new GsonBuilder().create();
 
-        List<Restaurant> r = gson.fromJson(output.toString(), new TypeToken<List<Restaurant>>() {
-        }.getType());
+        switch (type) {
+            case 0:
+                List<Restaurant> r = gson.fromJson(output.toString(), new TypeToken<List<Restaurant>>() {
+                }.getType());
 
-        Log.e("list", "" + r.get(1).getFamousMenu());
+                Log.e("list", "" + r.get(1).getFamousMenu());
 
-        // Open the Realm with encryption enabled
-        realm = getRealm();
-        realm.executeTransaction(t -> realm.insertOrUpdate(r));
+                // Open the Realm with encryption enabled
+                if(realm == null) {
+                    realm = getRealm();
+                }
+                realm.executeTransaction(t -> realm.insertOrUpdate(r));
+                break;
+            case 1:
 
-        loadingDialog.dismiss();
+                List<Alcohol> al = gson.fromJson(output.toString(), new TypeToken<List<Alcohol>>() {
+                }.getType());
+
+                Log.e("list", "" + al.get(1).getFamousMenu());
+
+                // Open the Realm with encryption enabled
+                if(realm == null) {
+                    realm = getRealm();
+                }
+                realm.executeTransaction(t -> realm.insertOrUpdate(al));
+                break;
+            case 2:
+                List<Cafe> ca = gson.fromJson(output.toString(), new TypeToken<List<Cafe>>() {
+                }.getType());
+
+                Log.e("list", "" + ca.get(1).getFamousMenu());
+
+                // Open the Realm with encryption enabled
+                if(realm == null) {
+                    realm = getRealm();
+                }
+                realm.executeTransaction(t -> realm.insertOrUpdate(ca));
+
+                loadingDialog.dismiss();
+                break;
+            case 3:
+                break;
+        }
+
+
     }
 }

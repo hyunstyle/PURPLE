@@ -33,9 +33,11 @@ import java.util.List;
 public class DataDownloadingThread extends AsyncTask<String, Void, JSONArray> {
 
     private AsyncTaskResponse delegate;
+    private int type;
 
-    public DataDownloadingThread(AsyncTaskResponse delegate) {
+    public DataDownloadingThread(AsyncTaskResponse delegate, int type) {
         this.delegate = delegate;
+        this.type = type;
     }
 
     @Override
@@ -50,8 +52,11 @@ public class DataDownloadingThread extends AsyncTask<String, Void, JSONArray> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(u[0]);
 
-            List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(1);
+            Log.e("type", u[3]);
+
+            List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(2);
             nameValuePair.add(new BasicNameValuePair(u[1], u[2])); // hi_client , unique id
+            nameValuePair.add(new BasicNameValuePair(u[3], String.valueOf(type)));
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
             HttpResponse httpResponse = httpclient.execute(httpPost);
 
@@ -83,7 +88,7 @@ public class DataDownloadingThread extends AsyncTask<String, Void, JSONArray> {
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
 
-        delegate.finished(jsonArray);
+        delegate.finished(jsonArray, type);
         super.onPostExecute(jsonArray);
     }
 

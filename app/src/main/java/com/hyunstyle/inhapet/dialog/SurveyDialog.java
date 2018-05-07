@@ -2,27 +2,23 @@ package com.hyunstyle.inhapet.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyunstyle.inhapet.R;
 import com.hyunstyle.inhapet.adapter.SurveyAdapter;
 import com.hyunstyle.inhapet.interfaces.SurveyResponse;
-import com.hyunstyle.inhapet.model.Restaurant;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sh on 2018-04-17.
@@ -33,14 +29,16 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
     private Context context;
     private ImageView logo;
     private int surveyType;
-    private SurveyAdapter adapter;
-    private GridView typeView;
-    private boolean[] isChecked = new boolean[10];
+    private SurveyAdapter firstAdapter, secondAdapter, thirdAdapter;
+    private GridView firstTypeGridView;
+    private GridView secondTypeGridView;
+    private GridView thirdTypeGridView;
+    private boolean[][] isChecked = new boolean[4][10];
     private OnSubmitListener onSubmitListener;
     private int filterPosition;
 
     public interface OnSubmitListener {
-        void filter(ArrayList<Integer> list, int filterPosition);
+        void filter(ArrayList<List<Integer>> list, int filterPosition);
         void shrink();
     }
 
@@ -62,18 +60,29 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_survey_dialog);
         getWindow().getAttributes().windowAnimations = R.style.dialog_appear_style;
-        typeView = findViewById(R.id.type_grid);
-        Button submit = findViewById(R.id.survey_submit);
-        Button cancel = findViewById(R.id.survey_cancel);
+        firstTypeGridView = findViewById(R.id.filter_first_type_grid);
+        secondTypeGridView = findViewById(R.id.filter_second_type_grid);
+        thirdTypeGridView = findViewById(R.id.filter_third_type_grid);
 
+        Button submit = findViewById(R.id.filter_submit);
+        ImageButton cancel = findViewById(R.id.filter_close);
         submit.setOnClickListener(view -> surveySubmit(isChecked));
         cancel.setOnClickListener(view -> this.dismiss());
 
         switch (surveyType) {
             case 0: // Restaurant
-                adapter = new SurveyAdapter(context, R.layout.list_item_restaurant_type,
-                        context.getResources().getStringArray(R.array.category_list), this);
-                typeView.setAdapter(adapter);
+                firstAdapter = new SurveyAdapter(context, 0, R.layout.list_item_restaurant_type,
+                        context.getResources().getStringArray(R.array.category_restaurant_menu), this);
+                firstTypeGridView.setAdapter(firstAdapter);
+
+                secondAdapter = new SurveyAdapter(context, 1, R.layout.list_item_restaurant_type,
+                        context.getResources().getStringArray(R.array.category_restaurant_bab_myeon_gogi_guk), this);
+                secondTypeGridView.setAdapter(secondAdapter);
+
+                thirdAdapter = new SurveyAdapter(context, 2, R.layout.list_item_restaurant_type,
+                        context.getResources().getStringArray(R.array.category_restaurant_solo_or_group), this);
+                thirdTypeGridView.setAdapter(thirdAdapter);
+
                 filterPosition = 0;
                 break;
             case 1: // Alcohol
@@ -85,14 +94,24 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
         }
     }
 
-    private void surveySubmit(boolean[] checkedList) {
-        ArrayList<Integer> checkedNumber = new ArrayList<>();
+    private void surveySubmit(boolean[][] checkedList) {
+        ArrayList<List<Integer>> checkedNumber = new ArrayList<>(checkedList.length);
+
         for(int i = 0; i<checkedList.length; i++) {
-            if(checkedList[i]) {
-                checkedNumber.add(i+1);
+            List<Integer> typeCheckedNumber = new ArrayList<>();
+            for(int j = 0; j<checkedList[i].length; j++) {
+                if(checkedList[i][j]) {
+                    typeCheckedNumber.add(j+1);
+                }
             }
+            checkedNumber.add(typeCheckedNumber);
         }
 
+//        for(int i = 0; i<checkedList.length; i++) {
+//            if(checkedList[i]) {
+//                checkedNumber.add(i+1);
+//            }
+//        }
 
         //onSubmitListener.filter(checkedNumber, filterPosition);
 
@@ -124,15 +143,15 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
     }
 
     @Override
-    public void clicked(int position, @NonNull View view, @NonNull TextView textView) {
+    public void clicked(int menuType, int position, @NonNull View view, @NonNull TextView textView) {
 
         Log.e("clicked at", "" + position);
-        if(isChecked[position]) {
-            isChecked[position] = false;
+        if(isChecked[menuType][position]) {
+            isChecked[menuType][position] = false;
             view.setBackground(ContextCompat.getDrawable(context, R.drawable.btn_round));
             textView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         } else {
-            isChecked[position] = true;
+            isChecked[menuType][position] = true;
             view.setBackground(ContextCompat.getDrawable(context, R.drawable.btn_round_activated));
             textView.setTextColor(ContextCompat.getColor(context, R.color.white));
         }

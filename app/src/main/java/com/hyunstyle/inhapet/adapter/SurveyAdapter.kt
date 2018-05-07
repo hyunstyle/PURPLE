@@ -17,8 +17,8 @@ import org.jetbrains.anko.find
  * Created by sh on 2018-04-17.
  */
 
-class SurveyAdapter(val context: Context, private val viewId: Int, private val types: Array<String>,
-                    val delegate: SurveyResponse) : BaseAdapter() {
+class SurveyAdapter(val context: Context, private val menuType: Int, private val viewId: Int, private val types: Array<String>,
+                    private val delegate: SurveyResponse) : BaseAdapter() {
 
 
     override fun getCount(): Int {
@@ -42,7 +42,7 @@ class SurveyAdapter(val context: Context, private val viewId: Int, private val t
             holder = ViewHolder()
             holder.name = itemView.findViewById(R.id.type_text)
             holder.layout = itemView.findViewById(R.id.type_layout)
-            holder.layout!!.setOnClickListener{v -> delegate.clicked(i, holder.layout!!, holder.name!!)}
+            holder.layout!!.setOnClickListener{v -> delegate.clicked(menuType, i, holder.layout!!, holder.name!!)}
 
             itemView.tag = holder
 
