@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey
  */
 
 open class Alcohol(@PrimaryKey var id: Int? = null,
-                      var isClose: Boolean = false,
+                      var isClose: Int = 1,
                    var ton: Int = 0,
                    var ttw: Int = 0,
                    var tth: Int = 0,

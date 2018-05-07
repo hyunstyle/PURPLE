@@ -10,8 +10,11 @@ import android.view.ViewGroup;
 
 import com.hyunstyle.inhapet.R;
 import com.hyunstyle.inhapet.ShopInfoActivity;
+import com.hyunstyle.inhapet.model.Alcohol;
+import com.hyunstyle.inhapet.model.Cafe;
 import com.hyunstyle.inhapet.model.Restaurant;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,8 +24,9 @@ import java.util.List;
 
 public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
 
-    private List<Restaurant> resultList = Collections.emptyList();
+    private List<?> resultList = Collections.emptyList();
     private Context context;
+    private int type;
 
     public ResultViewAdapter(Context context) {
         this.context = context;
@@ -41,22 +45,49 @@ public class ResultViewAdapter extends RecyclerView.Adapter<ResultViewHolder> {
         //TODO : shop 이미지, 좋아요 없음
         //holder.getThumbnail().setImageResource(resultList.get(position).get);
 
-        holder.getShopNameTextView().setText(resultList.get(position).getName());
-        holder.getShopFamousMenuTextView().setText(resultList.get(position).getFamousMenu());
-        holder.getLayout().setOnClickListener(view -> {
-            Intent intent = new Intent();
-            intent.setClass(context, ShopInfoActivity.class);
-            intent.putExtra("pk", resultList.get(position).getId());
-            context.startActivity(intent);
-
-        });
+        switch (type) {
+            case 0:
+                holder.getShopNameTextView().setText(((List<Restaurant>)resultList).get(position).getName());
+                holder.getShopFamousMenuTextView().setText(((List<Restaurant>)resultList).get(position).getFamousMenu());
+                holder.getLayout().setOnClickListener(view -> {
+                    Intent intent = new Intent();
+                    intent.setClass(context, ShopInfoActivity.class);
+                    intent.putExtra("pk", ((List<Restaurant>)resultList).get(position).getId());
+                    context.startActivity(intent);
+                });
+                break;
+            case 1:
+                holder.getShopNameTextView().setText(((List<Alcohol>)resultList).get(position).getName());
+                holder.getShopFamousMenuTextView().setText(((List<Alcohol>)resultList).get(position).getFamousMenu());
+                holder.getLayout().setOnClickListener(view -> {
+                    Intent intent = new Intent();
+                    intent.setClass(context, ShopInfoActivity.class);
+                    intent.putExtra("pk", ((List<Alcohol>) resultList).get(position).getId());
+                    context.startActivity(intent);
+                });
+                break;
+            case 2:
+                holder.getShopNameTextView().setText(((List<Cafe>)resultList).get(position).getName());
+                holder.getShopFamousMenuTextView().setText(((List<Cafe>)resultList).get(position).getFamousMenu());
+                holder.getLayout().setOnClickListener(view -> {
+                    Intent intent = new Intent();
+                    intent.setClass(context, ShopInfoActivity.class);
+                    intent.putExtra("pk", ((List<Cafe>)resultList).get(position).getId());
+                    context.startActivity(intent);
+                });
+                break;
+            case 3:
+                break;
+        }
 
     }
 
-    public void setData(List<Restaurant> data) {
+    public void setData(List<?> data, int type) {
 
         Log.e("adapter", "" + data.size());
+
         this.resultList = data;
+        this.type = type;
         notifyDataSetChanged();
 //        notifyItemRangeInserted(prevSize, size);
 //        notifyItemRangeChanged(prevSize, size);

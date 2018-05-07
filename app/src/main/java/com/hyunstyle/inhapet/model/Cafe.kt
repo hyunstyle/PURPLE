@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey
  */
 
 open class Cafe(@PrimaryKey var id: Int? = null,
-                   var isClose: Boolean = false,
+                   var isClose: Int = 1,
                    var mon: Int = 0,
                    var mtw: Int = 0,
                    var mth: Int = 0,

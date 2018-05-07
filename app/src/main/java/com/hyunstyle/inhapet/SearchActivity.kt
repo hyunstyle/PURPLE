@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.SpannableStringBuilder
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.ImageButton
 import com.hyunstyle.inhapet.adapter.AutoCompleteListAdapter
 import com.hyunstyle.inhapet.model.Restaurant
 
@@ -29,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
 
         autoCompleteTextView = findViewById(R.id.search_auto_complete_view)
         searchButton = findViewById(R.id.search_search_button)
-        val backButton = findViewById<Button>(R.id.search_back_button)
+        val backButton = findViewById<ImageButton>(R.id.search_back_button)
         backButton.setOnClickListener { click -> onBackPressed() }
         searchButton!!.setOnClickListener{click -> kotlin.run {
 

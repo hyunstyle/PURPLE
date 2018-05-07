@@ -29,6 +29,7 @@ import com.hyunstyle.inhapet.adapter.*
 import com.hyunstyle.inhapet.dialog.LoadingDialog
 import com.hyunstyle.inhapet.dialog.SurveyDialog
 import com.hyunstyle.inhapet.interfaces.AsyncTaskResponse
+import com.hyunstyle.inhapet.model.Alcohol
 import com.hyunstyle.inhapet.model.Restaurant
 import com.hyunstyle.inhapet.thread.ImageUrlDownloadingThread
 import io.realm.Realm
@@ -62,6 +63,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         when (filterPosition) {
             0 -> { // Restaurant Result
 
+                currentType = 0
                 val realmResults = realm!!.where(Restaurant::class.java)
                         .`in`("subCategory", list[0].toTypedArray())
                         .and()
@@ -71,12 +73,39 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
                         .findAllAsync()
 
                 realmResults.addChangeListener {
-                    result -> resultAdapter!!.setData(result)
+                    result -> resultAdapter!!.setData(result, currentType)
                 }
             }
 
             1 -> {
+                currentType = 1
+                val realmResults = realm!!.where(Alcohol::class.java)
+                        .beginGroup()
+                        .`in`("ton", list[0].toTypedArray())
+                        .or()
+                        .`in`("ttw", list[0].toTypedArray())
+                        .or()
+                        .`in`("tth", list[0].toTypedArray())
+                        .endGroup()
+                        .and()
+                        .beginGroup()
+                        .`in`("sno", list[1].toTypedArray())
+                        .or()
+                        .`in`("snt", list[1].toTypedArray())
+                        .endGroup()
+                        .and()
+                        .beginGroup()
+                        .`in`("mon", list[2].toTypedArray())
+                        .or()
+                        .`in`("mtw", list[2].toTypedArray())
+                        .or()
+                        .`in`("mth", list[2].toTypedArray())
+                        .endGroup()
+                        .findAllAsync()
 
+                realmResults.addChangeListener {
+                    result -> resultAdapter!!.setData(result, currentType)
+                }
             }
 
             2 -> {
@@ -130,6 +159,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     private lateinit var bestPlaceLayout: LinearLayout
     private var pageNumber: Int = 1
     private var itemCount: Int = 10
+    private var currentType: Int = 0
 
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
@@ -190,7 +220,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
             //resultAdapter.setData(realmResults)
             items.addChangeListener { result ->
                 kotlin.run {
-                    resultAdapter!!.setData(result)
+                    resultAdapter!!.setData(result, currentType)
                     progressBar.visibility = View.GONE
                 }
             }
@@ -359,7 +389,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         //resultAdapter.setData(realmResults)
         items.addChangeListener {
             result -> kotlin.run {
-            resultAdapter!!.setData(result)
+            resultAdapter!!.setData(result, currentType)
             progressBar.visibility = View.GONE
             }
         }

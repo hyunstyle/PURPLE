@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey
  */
 
 open class Restaurant(@PrimaryKey var id: Int? = null,
-                      var isClose: Boolean = false,
+                      var isClose: Int = 1,
                       var subCategory: Int = 0,
                       var subCategoryTwo: Int = 0,
                       var soloOrGroups: Int = 0,

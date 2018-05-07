@@ -64,7 +64,7 @@ class BestPlaceFragment : Fragment() {
         items.addChangeListener {
             result -> kotlin.run {
             Log.e("items", "" + result.size)
-            resultAdapter!!.setData(result)
+            resultAdapter!!.setData(result, 0)
             progressBar.visibility = View.GONE
         }
         }
@@ -130,7 +130,7 @@ class BestPlaceFragment : Fragment() {
         //resultAdapter.setData(realmResults)
         items.addChangeListener {
             result -> kotlin.run {
-            resultAdapter!!.setData(result)
+            resultAdapter!!.setData(result, 0)
             progressBar.visibility = View.GONE
         }
         }

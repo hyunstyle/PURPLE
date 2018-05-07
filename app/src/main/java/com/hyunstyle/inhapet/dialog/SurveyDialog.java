@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.hyunstyle.inhapet.R;
 import com.hyunstyle.inhapet.adapter.SurveyAdapter;
 import com.hyunstyle.inhapet.interfaces.SurveyResponse;
+import com.hyunstyle.inhapet.util.WrapContentGridView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +31,11 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
     private ImageView logo;
     private int surveyType;
     private SurveyAdapter firstAdapter, secondAdapter, thirdAdapter;
-    private GridView firstTypeGridView;
-    private GridView secondTypeGridView;
-    private GridView thirdTypeGridView;
-    private boolean[][] isChecked = new boolean[4][10];
+    private WrapContentGridView firstTypeGridView;
+    private WrapContentGridView secondTypeGridView;
+    private WrapContentGridView thirdTypeGridView;
+    private TextView headerTextView;
+    private boolean[][] isChecked = new boolean[4][15];
     private OnSubmitListener onSubmitListener;
     private int filterPosition;
 
@@ -63,7 +65,7 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
         firstTypeGridView = findViewById(R.id.filter_first_type_grid);
         secondTypeGridView = findViewById(R.id.filter_second_type_grid);
         thirdTypeGridView = findViewById(R.id.filter_third_type_grid);
-
+        headerTextView = findViewById(R.id.filter_title_text);
         Button submit = findViewById(R.id.filter_submit);
         ImageButton cancel = findViewById(R.id.filter_close);
         submit.setOnClickListener(view -> surveySubmit(isChecked));
@@ -71,6 +73,7 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
 
         switch (surveyType) {
             case 0: // Restaurant
+                headerTextView.setText(context.getResources().getString(R.string.survey_restaurant));
                 firstAdapter = new SurveyAdapter(context, 0, R.layout.list_item_restaurant_type,
                         context.getResources().getStringArray(R.array.category_restaurant_menu), this);
                 firstTypeGridView.setAdapter(firstAdapter);
@@ -86,6 +89,21 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
                 filterPosition = 0;
                 break;
             case 1: // Alcohol
+                headerTextView.setText(context.getResources().getString(R.string.survey_alcohol));
+                firstAdapter = new SurveyAdapter(context, 0, R.layout.list_item_restaurant_type,
+                        context.getResources().getStringArray(R.array.category_alcohol_type), this);
+                firstTypeGridView.setAdapter(firstAdapter);
+
+                secondAdapter = new SurveyAdapter(context, 1, R.layout.list_item_restaurant_type,
+                        context.getResources().getStringArray(R.array.category_alcohol_food), this);
+                secondTypeGridView.setAdapter(secondAdapter);
+
+                thirdAdapter = new SurveyAdapter(context, 2, R.layout.list_item_restaurant_type,
+                        context.getResources().getStringArray(R.array.category_alcohol_mood), this);
+                thirdTypeGridView.setAdapter(thirdAdapter);
+
+                filterPosition = 1;
+
                 break;
             case 2: // Cafe
                 break;
@@ -101,6 +119,14 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
             List<Integer> typeCheckedNumber = new ArrayList<>();
             for(int j = 0; j<checkedList[i].length; j++) {
                 if(checkedList[i][j]) {
+                    typeCheckedNumber.add(j+1);
+                }
+            }
+
+            Log.e("list length", "" + checkedList[i].length);
+
+            if(typeCheckedNumber.size() == 0) { // 선택안했으면 전부 선택한 것으로 취급
+                for(int j = 0; j<checkedList[i].length; j++) {
                     typeCheckedNumber.add(j+1);
                 }
             }
@@ -145,7 +171,6 @@ public class SurveyDialog extends Dialog implements SurveyResponse{
     @Override
     public void clicked(int menuType, int position, @NonNull View view, @NonNull TextView textView) {
 
-        Log.e("clicked at", "" + position);
         if(isChecked[menuType][position]) {
             isChecked[menuType][position] = false;
             view.setBackground(ContextCompat.getDrawable(context, R.drawable.btn_round));
