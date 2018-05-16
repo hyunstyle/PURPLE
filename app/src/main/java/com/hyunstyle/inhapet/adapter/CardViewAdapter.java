@@ -57,9 +57,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewHolder> implem
         int position = (int) view.getTag();
         switch (view.getId()) {
             case R.id.menu_item_layout:
-                SurveyDialog surveyDialog = new SurveyDialog(context, position, onSubmitListener);
+                SurveyDialog surveyDialog = new SurveyDialog(context, position, onSubmitListener, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
-                surveyDialog.getWindow().getAttributes().windowAnimations = R.style.dialog_appear_style;
+                //surveyDialog.getWindow().getAttributes().windowAnimations = R.style.dialog_appear_style;
                 surveyDialog.show();
                 // move to 설문
                 Log.e("pos", "" + position);

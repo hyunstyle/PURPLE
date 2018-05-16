@@ -2,6 +2,7 @@ package com.hyunstyle.inhapet.fragment
 
 
 import android.animation.Animator
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -10,6 +11,7 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,10 +24,12 @@ import com.hyunstyle.inhapet.Config
 import com.hyunstyle.inhapet.GridScrollLayoutManager
 
 import com.hyunstyle.inhapet.R
+import com.hyunstyle.inhapet.SearchActivity
 import com.hyunstyle.inhapet.adapter.*
 import com.hyunstyle.inhapet.dialog.LoadingDialog
 import com.hyunstyle.inhapet.dialog.SurveyDialog
 import com.hyunstyle.inhapet.interfaces.AsyncTaskResponse
+import com.hyunstyle.inhapet.model.Alcohol
 import com.hyunstyle.inhapet.model.Restaurant
 import com.hyunstyle.inhapet.thread.ImageUrlDownloadingThread
 import io.realm.Realm
@@ -45,7 +49,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         menuRecyclerView.startAnimation(shrinkAnim)
     }
 
-    override fun filter(list: java.util.ArrayList<Int>, filterPosition: Int) {
+    override fun filter(list: java.util.ArrayList<List<Int>>, filterPosition: Int) {
 
 //        var loadingDialog = LoadingDialog(context!!)
 //
@@ -59,17 +63,49 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         when (filterPosition) {
             0 -> { // Restaurant Result
 
+                currentType = 0
                 val realmResults = realm!!.where(Restaurant::class.java)
-                        .`in`("subCategory", list.toTypedArray())
+                        .`in`("subCategory", list[0].toTypedArray())
+                        .and()
+                        .`in`("subCategoryTwo", list[1].toTypedArray())
+                        .and()
+                        .`in`("soloOrGroups", list[2].toTypedArray())
                         .findAllAsync()
 
                 realmResults.addChangeListener {
-                    result -> resultAdapter!!.setData(result)
+                    result -> resultAdapter!!.setData(result, currentType)
                 }
             }
 
             1 -> {
+                currentType = 1
+                val realmResults = realm!!.where(Alcohol::class.java)
+                        .beginGroup()
+                        .`in`("ton", list[0].toTypedArray())
+                        .or()
+                        .`in`("ttw", list[0].toTypedArray())
+                        .or()
+                        .`in`("tth", list[0].toTypedArray())
+                        .endGroup()
+                        .and()
+                        .beginGroup()
+                        .`in`("sno", list[1].toTypedArray())
+                        .or()
+                        .`in`("snt", list[1].toTypedArray())
+                        .endGroup()
+                        .and()
+                        .beginGroup()
+                        .`in`("mon", list[2].toTypedArray())
+                        .or()
+                        .`in`("mtw", list[2].toTypedArray())
+                        .or()
+                        .`in`("mth", list[2].toTypedArray())
+                        .endGroup()
+                        .findAllAsync()
 
+                realmResults.addChangeListener {
+                    result -> resultAdapter!!.setData(result, currentType)
+                }
             }
 
             2 -> {
@@ -84,9 +120,9 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
     private lateinit var appTitleView: ImageView
     private lateinit var searchButton: ImageButton
-    private lateinit var semiTransparentLayout: RelativeLayout
-    private lateinit var autoCompleteTextView: AutoCompleteTextView
-    private var autoCompleteAdapter: AutoCompleteListAdapter? = null
+    //private lateinit var semiTransparentLayout: RelativeLayout
+    //private lateinit var autoCompleteTextView: AutoCompleteTextView
+    //private var autoCompleteAdapter: AutoCompleteListAdapter? = null
     private var decorViewBasicFlag: Int = 0
     private lateinit var nestedScrollView: NestedScrollView
     private lateinit var topProgressBar: ProgressBar
@@ -113,7 +149,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     private lateinit var sliderDotLayout: LinearLayout
     private var dots: ArrayList<ImageView> = ArrayList()
 
-    private val cardImages = arrayListOf(R.drawable.ic_outside_meal, R.drawable.ic_outside_drink, R.drawable.ic_outside_cafe, R.drawable.ic_outside_cafe)
+    private val cardImages = arrayListOf(R.drawable.ic_outside_meal, R.drawable.ic_outside_drink, R.drawable.ic_outside_cafe, R.drawable.ic_snack)
     private val cardStrings = arrayListOf(R.string.menu_meal, R.string.menu_alcohol, R.string.menu_cafe, R.string.menu_snack)
     private val NUMBER_OF_CARD: Int = cardImages.size
     private var cardList: ArrayList<com.hyunstyle.inhapet.model.Menu> = ArrayList()
@@ -123,6 +159,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     private lateinit var bestPlaceLayout: LinearLayout
     private var pageNumber: Int = 1
     private var itemCount: Int = 10
+    private var currentType: Int = 0
 
     private var visibleItemCount: Int = 0
     private var totalItemCount: Int = 0
@@ -146,12 +183,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
         Glide.with(context!!)
                 .load(ContextCompat.getDrawable(context!!, R.drawable.ic_banner))
-//                .apply(RequestOptions.bitmapTransform(CropTransformation(Util.dip2px(context, 300f), Util.dip2px(context, 100f),
-//                        CropTransformation.CropType.TOP)))
                 .into(appTitleView)
-
-        //val restaurantToggleButton = view.findViewById<Button>(R.id.toggle_restaurant)
-        //restaurantToggleButton.setOnClickListener { v -> createRestaurantList() }
 
         return view
     }
@@ -188,7 +220,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
             //resultAdapter.setData(realmResults)
             items.addChangeListener { result ->
                 kotlin.run {
-                    resultAdapter!!.setData(result)
+                    resultAdapter!!.setData(result, currentType)
                     progressBar.visibility = View.GONE
                 }
             }
@@ -197,11 +229,6 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
     }
 
     override fun onStop() {
-        if(semiTransparentLayout.visibility == View.VISIBLE) {
-            semiTransparentLayout.visibility = View.GONE
-            bottom_navigation.visibility = View.VISIBLE
-        }
-
         super.onStop()
     }
 
@@ -213,31 +240,28 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
         appTitleView = view.findViewById(R.id.app_title)
         searchButton = view.findViewById(R.id.search_button)
-        semiTransparentLayout = view.findViewById(R.id.semi_transparent_layout)
-        autoCompleteTextView = view.findViewById(R.id.search_auto_complete_view)
         searchButton.setOnClickListener { v -> kotlin.run {
-            if(semiTransparentLayout.visibility == View.GONE) {
 
-
-                val decorView = activity!!.window.decorView
-// Hide both the navigation bar and the status bar.
-// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-// a general rule, you should design your app to hide the status bar whenever you
-// hide the navigation bar.
-                val uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                //decorView.systemUiVisibility = uiOptions
-
-                semiTransparentLayout.bringToFront()
-                semiTransparentLayout.setOnClickListener { click -> kotlin.run {
-                    //decorView.systemUiVisibility = decorViewBasicFlag
-                    semiTransparentLayout.visibility = View.GONE
-                } }
-                semiTransparentLayout.animation = AnimationUtils.loadAnimation(context!!, R.anim.anim_fade_in)
-                semiTransparentLayout.visibility = View.VISIBLE
-                findAll()
-            }
+            val intent = Intent(context!!, SearchActivity::class.java)
+            startActivity(intent)
+//            if(semiTransparentLayout.visibility == View.GONE) {
+//
+//
+//                val decorView = activity!!.window.decorView
+//                val uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+//                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+//                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                //decorView.systemUiVisibility = uiOptions
+//
+//                semiTransparentLayout.bringToFront()
+//                semiTransparentLayout.setOnClickListener { click -> kotlin.run {
+//                    //decorView.systemUiVisibility = decorViewBasicFlag
+//                    semiTransparentLayout.visibility = View.GONE
+//                } }
+//                semiTransparentLayout.animation = AnimationUtils.loadAnimation(context!!, R.anim.anim_fade_in)
+//                semiTransparentLayout.visibility = View.VISIBLE
+//                findAll()
+//            }
         } }
 
         nestedScrollView = view.findViewById(R.id.outside_scroll_view)
@@ -365,7 +389,7 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         //resultAdapter.setData(realmResults)
         items.addChangeListener {
             result -> kotlin.run {
-            resultAdapter!!.setData(result)
+            resultAdapter!!.setData(result, currentType)
             progressBar.visibility = View.GONE
             }
         }
@@ -387,35 +411,30 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
         dots[position].setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_pager_selector_activated_12dp))
     }
 
+    override fun finished(output: JSONArray, type: Int) {
+        if (output.length() > 0) {
+            for (i in 0 until output.length()) {
+                val sb = StringBuilder(resources.getString(R.string.imagePrefix))
+                val u: String = output.get(i) as String
 
-    override fun finished(output: JSONArray) {
-        if(output != null) {
-            if (output.length() > 0) {
+                sb.append(u)
 
-                for (i in 0 until output.length()) {
-                    val sb = StringBuilder(resources.getString(R.string.imagePrefix))
-                    val u: String = output.get(i) as String
+                urls.add(sb.toString())
 
-                    sb.append(u)
-
-                    urls.add(sb.toString())
-
-                    Log.e("url", sb.toString())
-                }
-
-                topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
-                viewPager.adapter = topAdViewPagerAdapter
-
-                createDots(viewPager, topAdViewPagerAdapter!!)
-
-                topProgressBar.visibility = View.GONE
-
-            } else {
-                Log.d("no results", "no image.")
+                Log.e("url", sb.toString())
             }
+
+            topAdViewPagerAdapter = TopAdViewPagerAdapter(context!!, urls)
+            viewPager.adapter = topAdViewPagerAdapter
+
+            createDots(viewPager, topAdViewPagerAdapter!!)
+
+            topProgressBar.visibility = View.GONE
+
         } else {
-            Log.e("array", "null!")
+            Toast.makeText(context!!, resources.getString(R.string.error_server), Toast.LENGTH_LONG).show()
         }
+
     }
 
     private fun createDots(viewPager: ViewPager, adapter: TopAdViewPagerAdapter) {
@@ -443,27 +462,6 @@ class OutsideSchoolFragment : Fragment(), AsyncTaskResponse, ViewPager.OnPageCha
 
         viewPager.addOnPageChangeListener(this)
         viewPager.setCurrentItem(0, true)
-    }
-
-
-    private fun findAll() {
-        if(autoCompleteAdapter == null) {
-            items = realm!!.where<Restaurant>(Restaurant::class.java).findAllAsync() // 비동기로 찾기 종료시 addChangeListener 1회 실행
-        } else {
-            autoCompleteTextView.setAdapter(autoCompleteAdapter)
-        }
-
-        items.addChangeListener {
-            result -> kotlin.run {
-
-            val nameList = java.util.ArrayList<String>()
-
-            result.asSequence().mapTo(nameList, {it.name.toString()})
-            autoCompleteAdapter = AutoCompleteListAdapter(context!!, R.layout.list_item_restaurant, nameList)
-
-            autoCompleteTextView.setAdapter(autoCompleteAdapter)
-        }
-        }
     }
 
     companion object {

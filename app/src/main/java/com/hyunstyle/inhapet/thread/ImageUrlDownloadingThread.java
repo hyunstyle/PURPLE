@@ -2,6 +2,7 @@ package com.hyunstyle.inhapet.thread;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.hyunstyle.inhapet.Util;
 import com.hyunstyle.inhapet.interfaces.AsyncTaskResponse;
@@ -76,6 +77,8 @@ public class ImageUrlDownloadingThread extends AsyncTask<String, Void, JSONArray
     @Override
     protected void onPostExecute(JSONArray jsonArray)
     {
-        delegate.finished(jsonArray);
+        if(jsonArray != null) {
+            delegate.finished(jsonArray, 0);
+        }
     }
 }
